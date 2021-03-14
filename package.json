@@ -1,0 +1,19 @@
+{
+  "name": "easyhomeservice",
+  "version": "1.0.0",
+  "description": "Uma plataforma especializada em conectar pessoas que necessitam de serviços domiciliares com profissionais que o oferecem",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ricardosakuta/EasyHomeService.git"
+  },
+  "author": "Ricardo Sakuta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ricardosakuta/EasyHomeService/issues"
+  },
+  "homepage": "https://github.com/ricardosakuta/EasyHomeService#readme"
+}
