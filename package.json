@@ -4,7 +4,9 @@
   "description": "Uma plataforma especializada em conectar pessoas que necessitam de serviços domiciliares com profissionais que o oferecem",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd api && npm install && npm start",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "repository": {
     "type": "git",
