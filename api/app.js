@@ -7,6 +7,13 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+var setorDeAtividade = require('./routes/setorDeAtividade')
+var buscar = require('./routes/buscar')
+var cidade = require('./routes/cidade')
+var funcionario = require('./routes/funcionario')
+var historico = require('./routes/historico')
+var servico = require('./routes/servico')
+
 var app = express();
 
 // view engine setup
@@ -20,9 +27,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-app.get('/*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
+
+app.use('/api/users', usersRouter);
+app.use('/api/setordeatividade', setorDeAtividade);
+app.use('/api/buscar', buscar)
+app.use('/api/cidade', cidade)
+app.use('/api/funcionario', funcionario)
+app.use('/api/historico', historico)
+app.use('/api/servico', servico)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
