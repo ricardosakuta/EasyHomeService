@@ -9,7 +9,7 @@ class Buscar extends Component {
       }
     
       componentDidMount() {
-        fetch("http://localhost:3000/api/buscar")
+        fetch("/api/buscar")
           .then(res => res.json())
           .then(
             (result) => {
