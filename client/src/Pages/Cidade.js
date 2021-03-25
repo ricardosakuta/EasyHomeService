@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { Component }  from 'react';
 
-export default function Cidade() {
-    return (
-        <h1>Cidade</h1>
-    )
+class Cidade extends Component {
+    render() {
+        return (
+            <h1>Cidade</h1>
+        )
+    }
 }
+
+export default Cidade

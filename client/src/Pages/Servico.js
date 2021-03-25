@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { Component }  from 'react';
 
-export default function Servico() {
-    return (
-        <h1>Serviço</h1>
-    )
+class Servico extends Component {
+    render() {
+        return (
+            <h1>Serviço</h1>
+        )
+    }
 }
+
+export default Servico

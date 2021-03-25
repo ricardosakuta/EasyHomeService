@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { Component }  from 'react';
 
-export default function Historico() {
-    return (
-        <h1>Histórico</h1>
-    )
+class Historico extends Component {
+    render() {
+        return (
+            <h1>Histórico</h1>
+        )    
+    }
 }
+
+export default Historico
