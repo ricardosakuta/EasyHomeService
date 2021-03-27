@@ -1,11 +1,7 @@
-import React, { Component }  from 'react';
+import React from 'react';
 
-class Funcionario extends Component {
-    render() {
-        return (
-            <h1>Funcionário</h1>
-        )
-    }
+export default function Funcionario() {
+    return (
+        <h1>Funcionário</h1>
+    )
 }
-
-export default Funcionario

@@ -1,33 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Buscar extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          name: ''
-        };
-      }
-    
-      componentDidMount() {
-        fetch("/api/buscar")
-          .then(res => res.json())
-          .then(
-            (result) => {
-                
-              this.setState({
-                name: result.name
-              });
-            },
-          )
-      }
-
-    render () {
-        const { name } = this.state;
-
-        return (
-            <h1>{name}</h1>
-        )
-    }
+export default function Buscar() {
+  return (
+    <h1>Buscar</h1>
+  )
 }
-
-export default Buscar
