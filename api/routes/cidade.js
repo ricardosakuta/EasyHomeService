@@ -5,7 +5,7 @@ const {body, check} = require('express-validator')
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    pool.query('SELECT * FROM cidade', (error, results) => {
+    pool.query('SELECT * FROM cidade order by id', (error, results) => {
         if (error) {
           throw error
         }
