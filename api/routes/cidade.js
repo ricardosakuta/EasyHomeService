@@ -29,7 +29,7 @@ router.post(
 		const { nome, uf } = req.body
 
 		pool.query(
-			'INSERT INTO cidade (id, nome, uf) VALUES ((select max(id)+1 from cidade), $1, $2)',
+			'INSERT INTO cidade (id, nome, uf) VALUES ((select coalesce(max(id), 0)+1 from cidade), $1, $2)',
 			[nome, uf],
 			(error) => {
 				if (error) {
