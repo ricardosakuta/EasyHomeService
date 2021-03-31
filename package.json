@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/ricardosakuta/EasyHomeService/issues"
   },
-  "homepage": "https://github.com/ricardosakuta/EasyHomeService#readme"
+  "homepage": "https://github.com/ricardosakuta/EasyHomeService#readme",
+  "devDependencies": {
+    "eslint-plugin-react": "^7.23.1"
+  }
 }

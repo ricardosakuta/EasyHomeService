@@ -9,29 +9,29 @@ import SetorDeAtividade from './Pages/SetorDeAtividade';
 import SidebarMenu from './Components/SidebarMenu';
 
 export default function App() {
-  return (
-    <div className="app">
-      <Route exact path='/' render={() => (
-        <SidebarMenu page={ <Buscar/> } />
-      )}/>
-      <Route exact path='/buscar' render={() => (
-        <SidebarMenu page={ <Buscar/> } />
-      )}/>
-      <Route exact path='/cidade' render={() => (
-        <SidebarMenu page={ <Cidade /> } />
-      )}/>
-      <Route exact path='/funcionario' render={() => (
-        <SidebarMenu page={ <Funcionario/> } />
-      )}/>
-      <Route exact path='/historico' render={() => (
-        <SidebarMenu page={ <Historico/> } />
-      )}/>
-      <Route exact path='/servico' render={() => (
-        <SidebarMenu page={ <Servico/> } />
-      )}/>
-      <Route exact path='/setor' render={() => (
-        <SidebarMenu page={ <SetorDeAtividade/> } />
-      )}/>
-    </div>
-  )
+	return (
+		<div className="app">
+			<Route exact path='/' render={() => (
+				<SidebarMenu page={<Buscar />} />
+			)} />
+			<Route exact path='/buscar' render={() => (
+				<SidebarMenu page={<Buscar />} />
+			)} />
+			<Route exact path='/cidade' render={() => (
+				<SidebarMenu page={<Cidade />} />
+			)} />
+			<Route exact path='/funcionario' render={() => (
+				<SidebarMenu page={<Funcionario />} />
+			)} />
+			<Route exact path='/historico' render={() => (
+				<SidebarMenu page={<Historico />} />
+			)} />
+			<Route exact path='/servico' render={() => (
+				<SidebarMenu page={<Servico />} />
+			)} />
+			<Route exact path='/setor' render={() => (
+				<SidebarMenu page={<SetorDeAtividade />} />
+			)} />
+		</div>
+	)
 }
