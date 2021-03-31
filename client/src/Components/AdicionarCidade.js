@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircle from '@material-ui/icons/AddCircle';
+import * as CidadeAPI from '../API/CidadeAPI';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,7 +21,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AdicionarCidade(props) {
     const [open, setOpen] = React.useState(false);
-    const classes = useStyles();
+    const [cidade, setCidade] = React.useState('');
+    const [uf, setUF] = React.useState('');
+
+    const classes = useStyles();    
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -28,6 +32,21 @@ export default function AdicionarCidade(props) {
 
     const handleClose = () => {
         setOpen(false);
+        props.parentCallback();
+    };
+
+    const handleChange = (event) => {
+        const target = event.target;
+        target.id === 'cidade' ? setCidade(target.value) : setUF(target.value);
+    }
+
+    const handleSubmit = () => {
+        CidadeAPI.add({
+            nome: cidade,
+            uf: uf
+        }).then(() => {
+            handleClose();
+        });
     };
 
     return (
@@ -39,14 +58,14 @@ export default function AdicionarCidade(props) {
         <DialogTitle id="form-dialog-title">Editar</DialogTitle>
         <DialogContent>
             <form className={classes.root} noValidate autoComplete="off">
-                <TextField id="standard-basic" label="Cidade" defaultValue={props.nome}/>
+                <TextField id="cidade" label="Cidade" onChange={handleChange}/>
                 <br/>
-                <TextField id="standard-basic" label="UF" defaultValue={props.uf} />
+                <TextField id="uf" label="UF" onChange={handleChange}/>
             </form>
         </DialogContent>
         <DialogActions>
             <Button onClick={handleClose} color="primary">Cancel</Button>
-            <Button onClick={handleClose} color="primary">Atualizar</Button>
+            <Button onClick={handleSubmit} color="primary">Adicionar</Button>
         </DialogActions>
         </Dialog>
     </div>

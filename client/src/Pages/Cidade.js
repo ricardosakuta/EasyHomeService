@@ -24,25 +24,36 @@ const useStyles = makeStyles((theme) => ({
 export default function Cidade() {
 	const classes = useStyles();
 	const [cidades, setCidades] = useState([]);
-
+	const [update, setUdate] = useState(true);
+	
 	useEffect(() => {
-		async function fetchMyAPI() {
+		async function getCidades() {
 			let response = await CidadeAPI.getAll()
 			setCidades(response)
 		}
 
-		fetchMyAPI();
-	}, [])
+		if (update)	{
+			getCidades();
+			setUdate(false)
+		}
+	}, [update])
+
+	const handleUpdate = () => {
+		setUdate(true);
+	}
 
 	return (
 		<div>
 			<h1>Cidades:</h1>
-			{cidades.map(cidade => <CartaoCidade key={cidade.id}
-				id={cidade.id}
-				nome={cidade.nome}
-				uf={cidade.uf} />)}
+			{cidades.map(cidade =>
+				<CartaoCidade
+					key={cidade.id}
+					id={cidade.id}
+					nome={cidade.nome}
+					uf={cidade.uf}
+					parentCallback={handleUpdate} />)}
 			<div className={classes.root}>
-				<AdicionarCidade />
+				<AdicionarCidade parentCallback={handleUpdate}/>
 			</div>
 		</div>
 	)

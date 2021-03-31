@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-
 var setorDeAtividade = require('./routes/setorDeAtividade')
 var buscar = require('./routes/buscar')
 var cidade = require('./routes/cidade')

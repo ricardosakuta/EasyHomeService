@@ -26,20 +26,25 @@ const useStyles = makeStyles({
 export default function CartaoCidade(props) {
 	const classes = useStyles();
 
+	const updateCidade = () => {
+		props.parentCallback();
+	}
+
 	return (
-		<Card className={classes.root} variant="outlined" key={ props.id }>
+		<Card className={classes.root} variant="outlined" key={props.id}>
 			<CardContent>
 				<Typography variant="h5" component="h1">
-					{ props.id } - { props.nome }
+					{props.id} - {props.nome}
 				</Typography>
 				<Typography className={classes.pos} color="textSecondary">
-					{ props.uf }
+					{props.uf}
 				</Typography>
 			</CardContent>
 			<CardActions>
 				<EditarCidade id={props.id}
-											nome={props.nome}
-											uf={props.uf}/>
+					nome={props.nome}
+					uf={props.uf} 
+					parentCallback={updateCidade}/>
 			</CardActions>
 		</Card>
 	);

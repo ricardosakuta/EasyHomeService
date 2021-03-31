@@ -47,9 +47,7 @@ export default function SidebarMenu(props) {
 					>
 						<MenuIcon />
 					</IconButton>
-					<Typography variant="h6" className={classes.title}>
-						EH Service
-</Typography>
+					<Typography variant="h6" className={classes.title}>Eh-Service</Typography>
 					<Button variant="contained" color="secondary">Acessar</Button>
 				</Toolbar>
 			</AppBar>
