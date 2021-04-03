@@ -6,8 +6,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
-import * as CidadeAPI from '../API/CidadeAPI';
-import Snackbars from './Alert';
+import IconButton from '@material-ui/core/IconButton';
+import AddCircle from '@material-ui/icons/AddCircle';
+import * as CidadeAPI from '../../API/CidadeAPI';
+import Snackbars from '../Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -18,19 +20,21 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EditarCidade(props) {
-    let { id, nome, uf } = props;
+export default function AdicionarCidade(props) {
     const [open, setOpen] = React.useState(false);
-    const classes = useStyles();
+    const [cidade, setCidade] = React.useState('');
+    const [uf, setUF] = React.useState('');
     const [mensagem, setMensagem] = React.useState('');
     const [tipo, setTipo] = React.useState(0);
-    const [alertID, setAlertID] = React.useState(0);
+    const [alertID, setalertID] = React.useState(0);
 
     const callAlert = (t, m, i) => {
         setTipo(t);
         setMensagem(m);
-        setAlertID(i);
+        setalertID(i);
     }
+
+    const classes = useStyles();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -38,53 +42,43 @@ export default function EditarCidade(props) {
 
     const handleClose = () => {
         setOpen(false);
+        props.parentCallback();
     };
 
     const handleChange = (event) => {
         const target = event.target;
-        target.id === 'cidade' ? nome = target.value : uf = target.value;
+        target.id === 'cidade' ? setCidade(target.value) : setUF(target.value);
     }
 
-    const handleDelete = () => {
-        CidadeAPI.deleteById(id)
-            .then(res => {
-                callAlert(0, res.message, alertID + 1);
-                handleClose();
-                props.parentCallback();
-            });
-    }
-
-    const handleUpdate = () => {
-        CidadeAPI.update(id, {
-            nome: nome,
+    const handleSubmit = () => {
+        CidadeAPI.add({
+            nome: cidade,
             uf: uf
         }).then(res => {
             callAlert(0, res.message, alertID + 1);
             handleClose();
-            props.parentCallback();
         }).catch(error => {
             callAlert(1, error.response.message, alertID + 1);
         });
-    }
+    };
 
     return (
         <div>
-            <Button variant="outlined" color="primary" onClick={handleClickOpen}>Editar</Button>
+            <IconButton color="secondary" aria-label="Adicionar cidade" onClick={handleClickOpen}>
+                <AddCircle />
+            </IconButton>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Editar</DialogTitle>
                 <DialogContent>
                     <form className={classes.root} noValidate autoComplete="off">
-                        <TextField id="id" label="Código" defaultValue={id} InputProps={{ readOnly: true, }} />
+                        <TextField id="cidade" label="Cidade" onChange={handleChange} />
                         <br />
-                        <TextField id="cidade" label="Cidade" defaultValue={nome} onChange={handleChange} />
-                        <br />
-                        <TextField id="uf" label="UF" defaultValue={uf} onChange={handleChange} />
+                        <TextField id="uf" label="UF" onChange={handleChange} />
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleDelete} color="secondary">Apagar</Button>
                     <Button onClick={handleClose} color="primary">Cancel</Button>
-                    <Button onClick={handleUpdate} color="primary">Atualizar</Button>
+                    <Button onClick={handleSubmit} color="primary">Adicionar</Button>
                 </DialogActions>
             </Dialog>
             <Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />

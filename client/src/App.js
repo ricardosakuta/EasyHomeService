@@ -5,7 +5,7 @@ import Cidade from './Pages/Cidade';
 import Funcionario from './Pages/Funcionario';
 import Historico from './Pages/Historico';
 import Servico from './Pages/Servico';
-import SetorDeAtividade from './Pages/SetorDeAtividade';
+import Setor from './Pages/Setor';
 import SidebarMenu from './Components/SidebarMenu';
 
 export default function App() {
@@ -30,7 +30,7 @@ export default function App() {
 				<SidebarMenu page={<Servico />} />
 			)} />
 			<Route exact path='/setor' render={() => (
-				<SidebarMenu page={<SetorDeAtividade />} />
+				<SidebarMenu page={<Setor />} />
 			)} />
 		</div>
 	)

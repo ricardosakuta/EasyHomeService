@@ -3,7 +3,12 @@ const { validationResult } = require('express-validator')
 const cidadeController = require('../controllers/cidade.controller')
 
 exports.getAll = async (req, res) => {
-	pool.query('SELECT * FROM setor order by id', (error, results) => {
+	pool.query(
+		`select s.id, s.descricao,  s.cidade_id, c.nome as cidade_nome, c.uf as cidade_uf
+		from setor s 
+		inner join cidade c on (c.id = s.cidade_id)
+		order by s.id`,
+		(error, results) => {
 		if (error) {
 			throw error
 		}
