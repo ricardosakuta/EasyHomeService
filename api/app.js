@@ -4,12 +4,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-var setorDeAtividade = require('./routes/setor')
-var buscar = require('./routes/buscar')
-var cidade = require('./routes/cidade')
-var funcionario = require('./routes/funcionario')
-var historico = require('./routes/historico')
-var servico = require('./routes/servico')
+var setor = require('./routers/setor.routes')
+var buscar = require('./routers/buscar.routes')
+var cidade = require('./routers/cidade.routes')
+var funcionario = require('./routers/funcionario.routes')
+var historico = require('./routers/historico.routes')
+var servico = require('./routers/servico.routes')
 
 var app = express();
 
@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
 
-app.use('/api/setores', setorDeAtividade);
+app.use('/api/setores', setor);
 app.use('/api/buscar', buscar)
 app.use('/api/cidades', cidade)
 app.use('/api/funcionarios', funcionario)
