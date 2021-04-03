@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import * as CidadeAPI from '../API/CidadeAPI';
+import * as SetorAPI from '../API/SetorAPI';
 import { makeStyles } from '@material-ui/core/styles';
-import CartaoCidade from '../Components/Cidade/CartaoCidade';
-import AdicionarCidade from '../Components/Cidade/AdicionarCidade';
+import CartaoSetor from '../Components/Setor/CartaoSetor';
+import AdicionarSetor from '../Components/Setor/AdicionarSetor';
 
 const useStyles = makeStyles((theme) => ({
 	margin: {
@@ -21,15 +21,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function Cidade() {
+export default function Setor() {
 	const classes = useStyles();
-	const [cidades, setCidades] = useState([]);
+	const [setores, setSetores] = useState([]);
 	const [update, setUdate] = useState(true);
 	
 	useEffect(() => {
 		async function getCidades() {
-			let response = await CidadeAPI.getAll()
-			setCidades(response)
+			let response = await SetorAPI.getAll()
+			setSetores(response)
 		}
 
 		if (update)	{
@@ -44,16 +44,18 @@ export default function Cidade() {
 
 	return (
 		<div>
-			<h1>Cidades:</h1>
-			{cidades.map(cidade =>
-				<CartaoCidade
-					key={cidade.id}
-					id={cidade.id}
-					nome={cidade.nome}
-					uf={cidade.uf}
+			<h1>Setor de atividade</h1>
+			{setores.map(setor =>
+				<CartaoSetor
+					key={setor.id}
+					id={setor.id}
+					descricao={setor.descricao}
+                    cidade_id={setor.cidade_id}
+                    cidade_nome={setor.cidade_nome}
+					cidade_uf={setor.cidade_uf}
 					parentCallback={handleUpdate} />)}
 			<div className={classes.root}>
-				<AdicionarCidade parentCallback={handleUpdate}/>
+				<AdicionarSetor parentCallback={handleUpdate}/>
 			</div>
 		</div>
 	)

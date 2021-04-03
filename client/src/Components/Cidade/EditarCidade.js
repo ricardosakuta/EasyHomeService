@@ -6,7 +6,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
-import * as CidadeAPI from '../API/CidadeAPI';
+import * as CidadeAPI from '../../API/CidadeAPI';
+import Snackbars from '.././Alert';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -21,6 +22,15 @@ export default function EditarCidade(props) {
     let { id, nome, uf } = props;
     const [open, setOpen] = React.useState(false);
     const classes = useStyles();
+    const [mensagem, setMensagem] = React.useState('');
+    const [tipo, setTipo] = React.useState(0);
+    const [alertID, setAlertID] = React.useState(0);
+
+    const callAlert = (t, m, i) => {
+        setTipo(t);
+        setMensagem(m);
+        setAlertID(i);
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -37,19 +47,23 @@ export default function EditarCidade(props) {
 
     const handleDelete = () => {
         CidadeAPI.deleteById(id)
-        .then(() => {
-            setOpen(false);
-            props.parentCallback();
-        });
+            .then(res => {
+                callAlert(0, res.message, alertID + 1);
+                handleClose();
+                props.parentCallback();
+            });
     }
 
     const handleUpdate = () => {
         CidadeAPI.update(id, {
             nome: nome,
             uf: uf
-        }).then(() => {
-            setOpen(false);
+        }).then(res => {
+            callAlert(0, res.message, alertID + 1);
+            handleClose();
             props.parentCallback();
+        }).catch(error => {
+            callAlert(1, error.response.message, alertID + 1);
         });
     }
 
@@ -62,9 +76,9 @@ export default function EditarCidade(props) {
                     <form className={classes.root} noValidate autoComplete="off">
                         <TextField id="id" label="Código" defaultValue={id} InputProps={{ readOnly: true, }} />
                         <br />
-                        <TextField id="cidade" label="Cidade" defaultValue={nome} onChange={handleChange}/>
+                        <TextField id="cidade" label="Cidade" defaultValue={nome} onChange={handleChange} />
                         <br />
-                        <TextField id="uf" label="UF" defaultValue={uf} onChange={handleChange}/>
+                        <TextField id="uf" label="UF" defaultValue={uf} onChange={handleChange} />
                     </form>
                 </DialogContent>
                 <DialogActions>
@@ -73,6 +87,7 @@ export default function EditarCidade(props) {
                     <Button onClick={handleUpdate} color="primary">Atualizar</Button>
                 </DialogActions>
             </Dialog>
+            <Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />
         </div>
     );
 }

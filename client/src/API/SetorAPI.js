@@ -5,11 +5,11 @@ const headers = {
 }
 
 export const getAll = () =>
-	fetch(`${process.env.REACT_APP_API_HOST}/cidades`)
+	fetch(`${process.env.REACT_APP_API_HOST}/Setores`)
 		.then(res => res.json())
 
 export const update = (id, query) =>
-	fetch(`${process.env.REACT_APP_API_HOST}/cidades/${id}`, {
+	fetch(`${process.env.REACT_APP_API_HOST}/Setores/${id}`, {
 		method: 'PUT',
 		headers: {
 			...headers,
@@ -31,7 +31,7 @@ export const update = (id, query) =>
 	})
 
 export const add = (query) =>
-	fetch(`${process.env.REACT_APP_API_HOST}/cidades`, {
+	fetch(`${process.env.REACT_APP_API_HOST}/Setores`, {
 		method: 'POST',
 		headers: {
 			...headers,
@@ -52,6 +52,6 @@ export const add = (query) =>
 	})
 
 export const deleteById = (idCidade) =>
-	fetch(`${process.env.REACT_APP_API_HOST}/cidades/${idCidade}`, {
+	fetch(`${process.env.REACT_APP_API_HOST}/Setores/${idCidade}`, {
 		method: 'DELETE'
 	}).then(res => res.json())
