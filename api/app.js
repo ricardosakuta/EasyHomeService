@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-var setorDeAtividade = require('./routes/setorDeAtividade')
+var setorDeAtividade = require('./routes/setor')
 var buscar = require('./routes/buscar')
 var cidade = require('./routes/cidade')
 var funcionario = require('./routes/funcionario')
@@ -38,8 +38,8 @@ app.use('/api/historicos', historico)
 app.use('/api/servicos', servico)
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-	next(createError(404));
+app.use(function(req, res) {
+	res.status(404).json({message: "Nenhum registro foi encontrado."})
 });
 
 // error handler

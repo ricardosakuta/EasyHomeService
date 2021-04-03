@@ -7,7 +7,6 @@ const headers = {
 export const getAll = () =>
 	fetch(`${process.env.REACT_APP_API_HOST}/cidades`)
 		.then(res => res.json())
-		.then(data => data)
 
 export const update = (id, query) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/cidades/${id}`, {
@@ -17,8 +16,19 @@ export const update = (id, query) =>
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(query)
-	}).then(res => res.json())
-	.then(data => data)
+	}).then(res => {
+		if (res.ok) {
+			return res.json()
+		} else {
+			console.log('????')
+			return res.json().then((data) => {
+				let error      = new Error(res.status);
+				error.response = data;
+				error.status   = res.status;
+				throw error;
+			});
+		}
+	})
 
 export const add = (query) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/cidades`, {
@@ -28,11 +38,20 @@ export const add = (query) =>
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(query)
-	}).then(res => res.json())
-    .then(data => data)
+	}).then(res => {
+		if (res.ok) {
+			return res.json()
+		} else {
+			return res.json().then((data) => {
+				let error      = new Error(res.status);
+				error.response = data;
+				error.status   = res.status;
+				throw error;
+			  });
+		}
+	})
 
 export const deleteById = (idCidade) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/cidades/${idCidade}`, {
 		method: 'DELETE'
 	}).then(res => res.json())
-	.then(data => data.cidade)
