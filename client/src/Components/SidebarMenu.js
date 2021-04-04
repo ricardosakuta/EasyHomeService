@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@material-ui/core/styles';
+import { useHistory } from "react-router-dom";
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -19,6 +20,7 @@ export default function SidebarMenu(props) {
 	const theme = useTheme();
 	const [open, setOpen] = React.useState(false);
 	const { page } = props;
+	const history = useHistory();
 
 	const handleDrawerOpen = () => {
 		setOpen(true);
@@ -48,7 +50,7 @@ export default function SidebarMenu(props) {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" className={classes.title}>Eh-Service</Typography>
-					<Button variant="contained" color="secondary">Acessar</Button>
+					<Button variant="contained" color="secondary" onClick={() => history.push('acessar')}>Acessar</Button>
 				</Toolbar>
 			</AppBar>
 			<Drawer

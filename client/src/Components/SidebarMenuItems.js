@@ -4,7 +4,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Search from '@material-ui/icons/Search';
+import Home from '@material-ui/icons/Home';
 import List from '@material-ui/icons/List';
 import LocationCity from '@material-ui/icons/LocationCity';
 import Build from '@material-ui/icons/Build';
@@ -19,11 +19,11 @@ export default function SidebarMenuItems() {
     return (
         <div>
         <Divider />
-            <ListItem button onClick={() => history.push('buscar')}>
+            <ListItem button onClick={() => history.push('/')}>
             <ListItemIcon>
-                <Search />
+                <Home />
             </ListItemIcon>
-            <ListItemText disableTypography className={classes.SideBarFont} primary="Buscar" />
+            <ListItemText disableTypography className={classes.SideBarFont} primary="Home" />
             </ListItem >
 
             <ListItem button onClick={() => history.push('historico')}>
@@ -53,7 +53,7 @@ export default function SidebarMenuItems() {
             <ListItemIcon>
                 <Build />
             </ListItemIcon>
-            <ListItemText disableTypography className={classes.SideBarFont} primary="Servico" />
+            <ListItemText disableTypography className={classes.SideBarFont} primary="Serviço" />
             </ListItem >
 
             <Divider />

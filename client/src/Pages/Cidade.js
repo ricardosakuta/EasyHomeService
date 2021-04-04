@@ -44,7 +44,7 @@ export default function Cidade() {
 
 	return (
 		<div>
-			<h1>Cidades:</h1>
+			<h1>Cidade</h1>
 			{cidades.map(cidade =>
 				<CartaoCidade
 					key={cidade.id}
