@@ -18,9 +18,9 @@ export const update = (id, query) =>
 		body: JSON.stringify(query)
 	}).then(res => {
 		if (res.ok) {
+			console.log(process.env.REACT_APP_API_HOST)
 			return res.json()
 		} else {
-			console.log('????')
 			return res.json().then((data) => {
 				let error      = new Error(res.status);
 				error.response = data;

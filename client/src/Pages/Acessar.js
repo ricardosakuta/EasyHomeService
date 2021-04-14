@@ -1,93 +1,176 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
+import React, { useContext } from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import Entrar from '../Components/Usuario/Entrar';
-import Cadastrar from '../Components/Usuario/Cadastrar'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import AuthContext from '../Context/Auth';
+import GoogleLogin from 'react-google-login';
+import * as AuthAPI from '../API/AuthAPI';
+import Snackbars from '../Components/Alert';
 
-function TabPanel(props) {
-	const { children, value, index, ...other } = props;
-
+function Copyright() {
 	return (
-		<div
-			role="tabpanel"
-			hidden={value !== index}
-			id={`nav-tabpanel-${index}`}
-			aria-labelledby={`nav-tab-${index}`}
-			{...other}
-		>
-			{value === index && (
-				<Box p={3}>
-					<Typography>{children}</Typography>
-				</Box>
-			)}
-		</div>
-	);
-}
-
-TabPanel.propTypes = {
-	children: PropTypes.node,
-	index: PropTypes.any.isRequired,
-	value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-	return {
-		id: `nav-tab-${index}`,
-		'aria-controls': `nav-tabpanel-${index}`,
-	};
-}
-
-function LinkTab(props) {
-	return (
-		<Tab
-			component="a"
-			onClick={(event) => {
-				event.preventDefault();
-			}}
-			{...props}
-		/>
+		<Typography variant="body2" color="textSecondary" align="center">
+			{'Copyright © '}
+			<Link color="inherit" href="https://material-ui.com/">
+				Eh-Service
+      		</Link>{' '}
+			{new Date().getFullYear()}
+			{'.'}
+		</Typography>
 	);
 }
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-		flexGrow: 1,
-		backgroundColor: theme.palette.background.paper,
+	paper: {
+		marginTop: theme.spacing(8),
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
 	},
+	avatar: {
+		margin: theme.spacing(1),
+		backgroundColor: theme.palette.secondary.main,
+	},
+	form: {
+		width: '100%', // Fix IE 11 issue.
+		marginTop: theme.spacing(1),
+	},
+	submit: {
+		width: '100%',
+		margin: theme.spacing(3, 0, 2),
+	},
+	google: {
+		width: '100%',
+		margin: theme.spacing(3, 0, 2),
+	}
 }));
 
 export default function Acessar() {
 	const classes = useStyles();
-	const [value, setValue] = React.useState(0);
+	const authContext = useContext(AuthContext);
+    const [mensagem, setMensagem] = React.useState('');
+    const [tipo, setTipo] = React.useState(0);
+    const [alertID, setalertID] = React.useState(0);
 
-	const handleChange = (event, newValue) => {
-		setValue(newValue);
-	};
+    const callAlert = (t, m, i) => {
+        setTipo(t);
+        setMensagem(m);
+        setalertID(i);
+    }
+
+	const handleChangeEmail = (event) => {
+		const target = event.target
+		console.log(target.value)
+	}
+
+	const handleChangeSenha = (event) => {
+		const target = event.target
+		console.log(target.value)
+	}
+
+	const handleSubmit = () => {
+		console.log('Submit');
+	}
+
+	const responseGoogleSucess = (res) => {
+		console.log(res);
+
+        AuthAPI.add(res)
+		.then(res => {
+			authContext.setEmail(res.email);
+			authContext.setNome(res.name);
+			authContext.setIdCliente(res.id);
+			authContext.setPerfil(res.perfil)
+            callAlert(0, res.message, alertID + 1);
+        }).catch(error => {
+            callAlert(1, 'Erro genérico.', alertID + 1);
+        });
+	}
+
+	const responseGoogleFailure = (res) => {
+		console.log('responseGoogleFailure');
+		console.log(res);
+	}
 
 	return (
-		<div className={classes.root}>
-			<AppBar position="static">
-				<Tabs
-					variant="fullWidth"
-					value={value}
-					onChange={handleChange}
-					aria-label="nav tabs example"
-				>
-					<LinkTab label="Acessar" href="/drafts" {...a11yProps(0)} />
-					<LinkTab label="Cadastrar" href="/trash" {...a11yProps(1)} />
-				</Tabs>
-			</AppBar>
-			<TabPanel value={value} index={0}>
-				<Entrar />
-			</TabPanel>
-			<TabPanel value={value} index={1}>
-				<Cadastrar />
-			</TabPanel>
-		</div>
+		<Container component="main" maxWidth="xs">
+			<CssBaseline />
+			<div className={classes.paper}>
+				<Avatar className={classes.avatar}>
+					<LockOutlinedIcon />
+				</Avatar>
+				<Typography component="h1" variant="h5">
+					Acessar
+        		</Typography>
+				<form className={classes.form} noValidate>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						id="email"
+						label="Email"
+						name="email"
+						autoComplete="email"
+						autoFocus
+						onChange={handleChangeEmail}
+					/>
+					<TextField
+						variant="outlined"
+						margin="normal"
+						required
+						fullWidth
+						name="password"
+						label="Senha"
+						type="password"
+						id="password"
+						autoComplete="current-password"
+						onChange={handleChangeSenha}
+					/>
+					<Button
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						className={classes.submit}
+						onClick={handleSubmit}
+					>
+						Entrar
+          			</Button>
+					<Grid container>
+						<Grid item xs>
+							<Link href="#" variant="body2">
+								Esqueceu a senha?
+              				</Link>
+						</Grid>
+						<Grid item>
+							<Link href="/cadastrar" variant="body2">
+								{"Não tem conta? Crie uma aqui."}
+							</Link>
+						</Grid>
+					</Grid>
+					<GoogleLogin
+						clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+						buttonText="Acessar com conta Google"
+						onSuccess={responseGoogleSucess}
+						onFailure={responseGoogleFailure}
+						cookiePolicy={'single_host_origin'}
+						className={classes.google}
+					/>
+				</form>
+			</div>
+			<Box mt={8}>
+				<Copyright />
+			</Box>
+			<Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />
+		</Container>
 	);
 }

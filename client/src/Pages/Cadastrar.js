@@ -60,7 +60,7 @@ export default function Cadastrar() {
 					<LockOutlinedIcon />
 				</Avatar>
 				<Typography component="h1" variant="h5">
-					Sign up
+					Cadastro
         		</Typography>
 				<form className={classes.form} noValidate>
 					<Grid container spacing={2}>
@@ -108,6 +108,17 @@ export default function Cadastrar() {
 								type="password"
 								id="password"
 								autoComplete="current-password"
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								variant="outlined"
+								fullWidth
+								name="phoneNumber"
+								label="Telefone"
+								type="phoneNumber"
+								id="phoneNumber"
+								autoComplete="phoneNumber"
 							/>
 						</Grid>
 					</Grid>

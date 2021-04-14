@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import clsx from 'clsx';
 import { useTheme } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
@@ -14,6 +14,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import useStyles from '.././Style/MenuUseStyles';
 import SidebarMenuItens from './SidebarMenuItems'
+import AuthContext from '../Context/Auth';
+import Avatar from '@material-ui/core/Avatar';
 
 export default function SidebarMenu(props) {
 	const classes = useStyles();
@@ -21,6 +23,9 @@ export default function SidebarMenu(props) {
 	const [open, setOpen] = React.useState(false);
 	const { page } = props;
 	const history = useHistory();
+	const authContext = useContext(AuthContext);
+
+	useEffect(() => {}, [authContext.email])
 
 	const handleDrawerOpen = () => {
 		setOpen(true);
@@ -50,7 +55,11 @@ export default function SidebarMenu(props) {
 						<MenuIcon />
 					</IconButton>
 					<Typography variant="h6" className={classes.title}>Eh-Service</Typography>
-					<Button variant="contained" color="secondary" onClick={() => history.push('acessar')}>Acessar</Button>
+					{authContext.nome !== "" ? (
+						<Avatar ></Avatar>
+					) : (
+						<Button variant="contained" color="secondary" onClick={() => history.push('acessar')}>Acessar</Button>	
+					)}
 				</Toolbar>
 			</AppBar>
 			<Drawer
