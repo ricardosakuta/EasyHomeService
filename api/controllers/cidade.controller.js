@@ -73,7 +73,7 @@ exports.delete = async (req, res) => {
 	pool.query(
 		'DELETE FROM cidade WHERE id=$1',
 		[req.params.id],
-		(error, results) => {
+		(error) => {
 			if (error) {
 				throw error
 			}

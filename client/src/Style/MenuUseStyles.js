@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { deepOrange } from '@material-ui/core/colors';
 
 const drawerWidth = 240;
 
@@ -60,6 +61,10 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  orange: {
+	  color: theme.palette.getContrastText(deepOrange[500]),
+	  backgroundColor: deepOrange[500],
+	}
 }));
 
 export default useStyles;

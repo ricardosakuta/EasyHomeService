@@ -1,69 +1,95 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Search from '@material-ui/icons/Search';
+import Home from '@material-ui/icons/Home';
 import List from '@material-ui/icons/List';
 import LocationCity from '@material-ui/icons/LocationCity';
 import Build from '@material-ui/icons/Build';
 import Work from '@material-ui/icons/Work';
 import AccountBox from '@material-ui/icons/AccountBox';
 import useStyles from '.././Style/MenuUseStyles';
+import AuthContext from '../Context/Auth';
 
 export default function SidebarMenuItems() {
     const classes = useStyles();
     const history = useHistory();
+    const authContext = useContext(AuthContext);
+
 
     return (
         <div>
         <Divider />
-            <ListItem button onClick={() => history.push('buscar')}>
+            <ListItem button onClick={() => history.push('/')}>
             <ListItemIcon>
-                <Search />
+                <Home />
             </ListItemIcon>
-            <ListItemText disableTypography className={classes.SideBarFont} primary="Buscar" />
+            <ListItemText disableTypography className={classes.SideBarFont} primary="Home" />
             </ListItem >
+            {
+                authContext.perfil === 2 ? (
+                    <div>
+                    <ListItem button onClick={() => history.push('servico')}>
+                    <ListItemIcon>
+                        <Build />
+                    </ListItemIcon>
+                    <ListItemText disableTypography className={classes.SideBarFont} primary="Serviço" />
+                    </ListItem >
 
-            <ListItem button onClick={() => history.push('historico')}>
-            <ListItemIcon>
-                <List />            
-            </ListItemIcon>
-            <ListItemText disableTypography className={classes.SideBarFont} primary="Histórico" />
-            </ListItem >
+                    <ListItem button onClick={() => history.push('historico')}>
+                    <ListItemIcon>
+                        <List />            
+                    </ListItemIcon>
+                    <ListItemText disableTypography className={classes.SideBarFont} primary="Histórico" />
+                    </ListItem >
+                    </div>
+                ) : (
+                    null
+                )   
+            }
 
-            <Divider />
+            {
+                authContext.perfil === 1 ? (
+                    <div>
+                    <Divider />
 
-            <ListItem button onClick={() => history.push('cidade')}>
-            <ListItemIcon>
-                <LocationCity />
-            </ListItemIcon>
-            <ListItemText disableTypography className={classes.SideBarFont} primary="Cidade" />
-            </ListItem >
+                    <ListItem button onClick={() => history.push('cidade')}>
+                    <ListItemIcon>
+                        <LocationCity />
+                    </ListItemIcon>
+                    <ListItemText disableTypography className={classes.SideBarFont} primary="Cidade" />
+                    </ListItem >
 
-            <ListItem button onClick={() => history.push('setor')}>
-            <ListItemIcon>
-                <Work />
-            </ListItemIcon>
-            <ListItemText disableTypography className={classes.SideBarFont} primary="Setor de atividade" />
-            </ListItem >
+                    <ListItem button onClick={() => history.push('setor')}>
+                    <ListItemIcon>
+                        <Work />
+                    </ListItemIcon>
+                    <ListItemText disableTypography className={classes.SideBarFont} primary="Setor de atividade" />
+                    </ListItem >
+                    </div>
+                ) : (
+                    null
+                )   
+            }
 
-            <ListItem button onClick={() => history.push('servico')}>
-            <ListItemIcon>
-                <Build />
-            </ListItemIcon>
-            <ListItemText disableTypography className={classes.SideBarFont} primary="Servico" />
-            </ListItem >
+            {
+                authContext.perfil === 0 ? (
+                    <div>                    
+                    <Divider />
 
-            <Divider />
-
-            <ListItem button onClick={() => history.push('funcionario')}>
-            <ListItemIcon>
-                <AccountBox />
-            </ListItemIcon>
-            <ListItemText disableTypography className={classes.SideBarFont} primary="Funcionário" />
-            </ListItem >
+                    <ListItem button onClick={() => history.push('funcionario')}>
+                    <ListItemIcon>
+                        <AccountBox />
+                    </ListItemIcon>
+                    <ListItemText disableTypography className={classes.SideBarFont} primary="Funcionário" />
+                    </ListItem >
+                    </div>
+                ) : (
+                    null
+                )   
+            }
         </div>
     );
 }

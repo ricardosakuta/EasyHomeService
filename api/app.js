@@ -10,6 +10,8 @@ var cidade = require('./routers/cidade.routes')
 var funcionario = require('./routers/funcionario.routes')
 var historico = require('./routers/historico.routes')
 var servico = require('./routers/servico.routes')
+var authGoogle = require('./routers/authGoogle.routes')
+var session = require('express-session');
 
 var app = express();
 
@@ -18,6 +20,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(cors());
+
+app.use(session({
+    secret: '2C44-4D44-WppQ38S',
+    resave: true,
+    saveUninitialized: true
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -31,11 +39,12 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/setores', setor);
-app.use('/api/buscar', buscar)
-app.use('/api/cidades', cidade)
-app.use('/api/funcionarios', funcionario)
-app.use('/api/historicos', historico)
-app.use('/api/servicos', servico)
+app.use('/api/buscar', buscar);
+app.use('/api/cidades', cidade);
+app.use('/api/funcionarios', funcionario);
+app.use('/api/historicos', historico);
+app.use('/api/servicos', servico);
+app.use('/api/auth/google', authGoogle);
 
 // catch 404 and forward to error handler
 app.use(function(req, res) {
