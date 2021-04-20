@@ -15,7 +15,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import useStyles from '.././Style/MenuUseStyles';
 import SidebarMenuItens from './SidebarMenuItems'
 import AuthContext from '../Context/Auth';
-import Avatar from '@material-ui/core/Avatar';
+import UserButton from '../Components/UserButton';
 
 export default function SidebarMenu(props) {
 	const classes = useStyles();
@@ -25,7 +25,7 @@ export default function SidebarMenu(props) {
 	const history = useHistory();
 	const authContext = useContext(AuthContext);
 
-	useEffect(() => {}, [authContext.email])
+	useEffect(() => { }, [authContext.email])
 
 	const handleDrawerOpen = () => {
 		setOpen(true);
@@ -56,9 +56,9 @@ export default function SidebarMenu(props) {
 					</IconButton>
 					<Typography variant="h6" className={classes.title}>Eh-Service</Typography>
 					{authContext.nome !== "" ? (
-						<Avatar ></Avatar>
+						<UserButton />
 					) : (
-						<Button variant="contained" color="secondary" onClick={() => history.push('acessar')}>Acessar</Button>	
+						<Button variant="contained" color="secondary" onClick={() => history.push('acessar')}>Acessar</Button>
 					)}
 				</Toolbar>
 			</AppBar>

@@ -1,6 +1,5 @@
 const { pool } = require('../db/config')
 const { validationResult } = require('express-validator')
-const cidadeController = require('../controllers/cidade.controller')
 
 exports.getAll = async (req, res) => {
 	pool.query(
