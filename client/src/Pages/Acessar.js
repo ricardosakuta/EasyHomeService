@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { useHistory } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -56,6 +57,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Acessar() {
 	const classes = useStyles();
 	const authContext = useContext(AuthContext);
+	const history = useHistory();
+
     const [mensagem, setMensagem] = React.useState('');
     const [tipo, setTipo] = React.useState(0);
     const [alertID, setalertID] = React.useState(0);
@@ -90,6 +93,7 @@ export default function Acessar() {
 			authContext.setIdCliente(res.id);
 			authContext.setPerfil(res.perfil)
             callAlert(0, res.message, alertID + 1);
+			history.push('/')
         }).catch(error => {
             callAlert(1, 'Erro genérico.', alertID + 1);
         });

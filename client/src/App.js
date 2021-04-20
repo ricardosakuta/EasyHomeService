@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route } from "react-router-dom";
 import Home from './Pages/Home';
 import Cidade from './Pages/Cidade';
@@ -8,14 +8,46 @@ import Servico from './Pages/Servico';
 import Setor from './Pages/Setor';
 import Acessar from './Pages/Acessar'
 import Cadastrar from './Pages/Cadastrar'
+import Perfil from './Pages/Perfil'
 import SidebarMenu from './Components/SidebarMenu';
 import AuthContext from './Context/Auth';
 
 export default function App() {
     const[nome, setNome] = useState('')
     const[email, setEmail] = useState('')
-	const[idCliente, setIdCliente] = useState('')
-	const[perfil, setPerfil] = useState(0)
+	const[idCliente, setIdCliente] = useState(0)
+	const[perfil, setPerfil] = useState(-1)
+
+	useEffect(() => {
+		if (localStorage.hasOwnProperty("nome")) {
+			setNome(localStorage.getItem("nome"))
+		}
+		if (localStorage.hasOwnProperty("email")) {
+			setEmail(localStorage.getItem("email"))
+		}
+		if (localStorage.hasOwnProperty("idCliente")) {
+			setIdCliente(Number(localStorage.getItem("idCliente")))
+		}
+		if (localStorage.hasOwnProperty("perfil")) {
+			setPerfil(Number(localStorage.getItem("perfil")))
+		}
+	}, [])
+
+	useEffect(() => {
+		localStorage.setItem("nome", nome)
+	}, [nome])
+
+	useEffect(() => {
+		localStorage.setItem("email", email)
+	}, [email])
+
+	useEffect(() => {
+		localStorage.setItem("idCliente", idCliente)
+	}, [idCliente])
+
+	useEffect(() => {
+		localStorage.setItem("perfil", perfil)
+	}, [perfil])
 
 	return (
 		<div className="app">
@@ -43,6 +75,9 @@ export default function App() {
 				)} />
 				<Route exact path='/cadastrar' render={() => (
 					<SidebarMenu page={<Cadastrar />} />
+				)} />
+				<Route exact path='/perfil' render={() => (
+					<SidebarMenu page={<Perfil />} />
 				)} />
 			</AuthContext.Provider>
 		</div>

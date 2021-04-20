@@ -7,7 +7,7 @@ var cors = require('cors');
 var setor = require('./routers/setor.routes')
 var buscar = require('./routers/buscar.routes')
 var cidade = require('./routers/cidade.routes')
-var funcionario = require('./routers/funcionario.routes')
+var usuario = require('./routers/usuario.routes')
 var historico = require('./routers/historico.routes')
 var servico = require('./routers/servico.routes')
 var authGoogle = require('./routers/authGoogle.routes')
@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 app.use('/api/setores', setor);
 app.use('/api/buscar', buscar);
 app.use('/api/cidades', cidade);
-app.use('/api/funcionarios', funcionario);
+app.use('/api/usuario', usuario);
 app.use('/api/historicos', historico);
 app.use('/api/servicos', servico);
 app.use('/api/auth/google', authGoogle);

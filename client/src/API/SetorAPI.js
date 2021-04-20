@@ -20,7 +20,6 @@ export const update = (id, query) =>
 		if (res.ok) {
 			return res.json()
 		} else {
-			console.log('????')
 			return res.json().then((data) => {
 				let error      = new Error(res.status);
 				error.response = data;
