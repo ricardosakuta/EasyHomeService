@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	root: {
 		'& > *': {
-			margin: theme.spacing(1),
+			margin: theme.spacing(3),
 			position: 'fixed',
 			bottom: '0px',
 			right: '0px',
