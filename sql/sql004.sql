@@ -20,12 +20,13 @@ CREATE TABLE empresa (
 CREATE INDEX idx_empresa_nome on empresa(nome);
 
 CREATE TABLE servico (
-    id integer primary key,
+    empresa_id integer not null,
+    seq integer not null,
     nome varchar(255) not null,
 	descricao varchar(255) not null,
     imagem_url varchar(255) not null,
     valor float,
-    empresa_id integer not null,
+	PRIMARY KEY(empresa_id, seq),
 	CONSTRAINT fk_empresa
         FOREIGN KEY(empresa_id) 
 	    REFERENCES empresa(id)

@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function Empresa() {
+export default function Empresa(props) {
     const classes = useStyles();
     const [id, setId] = React.useState(0);
     const [cidade_id, setCidadeId] = React.useState(-1);
@@ -63,6 +63,10 @@ export default function Empresa() {
         setMensagem(m);
         setalertID(i);
     }
+
+    useEffect(() => {
+        props.parentCallback(id);
+    }, [id, props])
 
     useEffect(() => {
         async function getCidades() {
@@ -194,7 +198,7 @@ export default function Empresa() {
                                 type="Descricao"
                                 id="Descricao"
                                 autoComplete="Descricao"
-                                defaultValue={descricao}
+                                value={descricao}
                                 multiline
                                 rows={3}
                                 onChange={handleChangeDescricao}

@@ -17,10 +17,10 @@ const upload = multer({
 })
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-    res.send('Serviço');
-});
+router.get('/:id', servicoController.getAll);
 
 router.post('/', upload.single('upload'), servicoController.post);
+
+router.delete('/:empresa_id/:seq', servicoController.delete);
 
 module.exports = router;

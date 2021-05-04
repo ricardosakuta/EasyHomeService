@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-//import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CardActions from '@material-ui/core/CardActions';
@@ -14,6 +13,8 @@ import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import Empresa from '../Components/Servico/Empresa'
 import TextField from '@material-ui/core/TextField';
+import * as ServicoAPI from '../API/ServicoAPI';
+import Snackbars from '../Components/Alert';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -64,129 +65,164 @@ const useStyles = makeStyles((theme) => ({
 export default function Servico() {
 	const classes = useStyles();
 	const [cards, setCards] = React.useState([]);
+	const [idEmpresa, setIdEmpresa] = React.useState(0);
 	const defatulURL = 'https://designshack.net/wp-content/uploads/placeholder-image-368x246.png'
+	const [mensagem, setMensagem] = React.useState('');
+	const [tipo, setTipo] = React.useState(0);
+	const [alertID, setalertID] = React.useState(0);
+
+	const callAlert = (t, m, i) => {
+		setTipo(t);
+		setMensagem(m);
+		setalertID(i);
+	}
 
 	useEffect(() => {
-		setCards([
-			{
-				id: 1,
-				nome: 'Teste01',
-				descricao: 'Iunbfa oaregoai awefouinawefjn awefiuna weifuaefiunwaef',
-				imagem_url: defatulURL,
-				valor: 10,
-				selectedFile: null,
-				selectedFileURL: null
-			},
-			{
-				id: 2,
-				nome: 'Teste02',
-				descricao: 'Iunbfa oaregoai awefouinawefjn awefiuna weifuaefiunwaef',
-				imagem_url: defatulURL,
-				valor: 20,
-				selectedFile: null,
-				selectedFileURL: null
-			},
-			{
-				id: 3,
-				nome: 'Teste03',
-				descricao: 'Iunbfa oaregoai awefouinawefjn awefiuna weifuaefiunwaef',
-				imagem_url: defatulURL,
-				valor: 30,
-				selectedFile: null,
-				selectedFileURL: null
-			},
-			{
-				id: 4,
-				nome: 'Teste04',
-				descricao: 'Iunbfa oaregoai awefouinawefjn awefiuna weifuaefiunwaef',
-				imagem_url: defatulURL,
-				valor: 0,
-				selectedFile: null,
-				selectedFileURL: null
-			}
-		]);
-	}, []);
+		async function getServicos() {
+			let response = await ServicoAPI.getAll(idEmpresa)
+			setCards(response);
+		}
 
-	useEffect(() => { }, [cards])
+		if (idEmpresa > 0) {
+			getServicos();
+
+		}
+	}, [idEmpresa])
+
+	const getCardId = () => {
+		let seq = Math.max(...cards.map(o => o.seq)) + 1
+		return seq;
+	}
 
 	const handleAddServico = () => {
+		let CardSeq = 1;
+
+		if (cards.length > 0)
+			CardSeq = getCardId()
+
+		console.log("CardId: " + CardSeq);
+
 		setCards([...cards, {
-			id: 5,
+			seq: CardSeq,
 			nome: '',
 			descricao: '',
-			imagem_url: 'https://designshack.net/wp-content/uploads/placeholder-image-368x246.png',
-			valor: 0
+			imagem_url: defatulURL,
+			valor: 0,
+			imagem: ''
 		}]);
 	}
 
 	const handleFileChange = event => {
 		let newCards = [...cards];
-		newCards[event.target.id].selectedFile = event.target.files[0];
-		newCards[event.target.id].selectedFileURL = URL.createObjectURL(cards[event.target.id].selectedFile);
+		let id = parseInt(event.currentTarget.id.replace(/[^\d.]/g, ''));
+		newCards[id].selectedFile = event.target.files[0];
+		newCards[id].selectedFileURL = URL.createObjectURL(cards[id].selectedFile);
 		setCards(newCards);
 	};
 
 	const handleFileUpload = e => {
 		const id = e.currentTarget.id;
-		console.log("ID: " + e.currentTarget.id)
-		console.log(cards[id].nome);
-		// Create an object of formData 
 		const formData = new FormData();
 
 		if (!id || !cards[id].selectedFile)
 			return;
 
-		// Update the formData object 
-		formData.append(
-			"myFile",
-			cards[id].selectedFile,
-			cards[id].selectedFile.name
-		);
+		formData.append("upload", cards[id].selectedFile);
 
-		// Details of the uploaded file 
-		console.log(cards[id].selectedFileURL);
-		console.log(cards[id].nome);
+		formData.append("empresa_id", idEmpresa);
 
-		// Request made to the backend api 
-		// Send formData object 
-		//axios.post("api/uploadfile", formData); 
+		formData.append("seq", cards[id].seq);
+
+		formData.append("nome", cards[id].nome);
+
+		formData.append("descricao", cards[id].descricao);
+
+		formData.append("valor", cards[id].valor);
+
+		formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
+
+		ServicoAPI.add(formData)
+			.then(res => {
+				callAlert(0, res.message, alertID + 1);
+			}).catch(error => {
+				console.log(error);
+				callAlert(1, error.response.message, alertID + 1);
+			});
 	};
 
-    const handleChangeNome = (event) => {
-        const target = event.target;
-		const id = event.currentTarget.key;
+	const handleChangeNome = (event) => {
+		const target = event.target;
+		const id = parseInt(event.currentTarget.id.replace(/[^\d.]/g, ''));
 		let newCards = [...cards];
+
+		if (!newCards[id])
+			return;
 
 		newCards[id].nome = target.value;
 		setCards(newCards);
-    }
+	}
 
-    const handleChangeDescricao = (event) => {
-        const target = event.target;
-		const id = event.currentTarget.key;
+	const handleChangeDescricao = (event) => {
+		const target = event.target;
+		const id = parseInt(event.currentTarget.id.replace(/[^\d.]/g, ''));
 		let newCards = [...cards];
-		
+
+		if (!newCards[id])
+			return;
+
 		newCards[id].descricao = target.value;
 		setCards(newCards);
-    }
+	}
 
-    const handleChangeValor = (event) => {
-        const target = event.target;
-		const id = event.currentTarget.key;
+	const handleChangeValor = (event) => {
+		const target = event.target;
+		const id = parseInt(event.currentTarget.id.replace(/[^\d.]/g, ''));
 		let newCards = [...cards];
-		
+
+		if (!newCards[id]) {
+			console.log("Erro ao cadastrar o valor")
+			return;
+		}
+
 		newCards[id].valor = target.value;
+		console.log("newCards[id].valor: " + newCards[id].valor)
 		setCards(newCards);
-    }
+	}
+
+	const updateValues = (empresa) => {
+		setIdEmpresa(empresa);
+	}
+
+	const deleteCard = (event) => {
+		const id = event.currentTarget.id;
+
+		ServicoAPI.deleteById(idEmpresa, cards[id].seq)
+			.then(res => {
+				let newCards = [...cards];
+				newCards.splice(id, 1)
+				setCards(newCards);
+
+				callAlert(0, res.message, alertID + 1);
+			}).catch(error => {
+				console.log(error);
+				callAlert(1, error.response.message, alertID + 1);
+			});
+	}
 
 	return (
 		<div>
 			<div className={classes.heroContent}>
-				<Empresa />
+				<Empresa parentCallback={updateValues} />
 				<Container className={classes.cardGrid} maxWidth="md">
-					<Typography component="h1" variant="h5" className={classes.paper}>
-						Serviços
-        		    </Typography>
+					{cards.length > 0 ? (
+						<Typography component="h1" variant="h5" className={classes.paper}>
+							Serviços
+						</Typography>
+					) : (
+						<Typography component="h1" variant="h5" className={classes.paper}>
+							Nenhum serviço cadastrado!
+						</Typography>
+					)}
 					<Grid container spacing={4}>
 						{cards.map((card, index) => (
 							<Grid item key={card.id} xs={12} sm={6} md={4}>
@@ -198,7 +234,12 @@ export default function Servico() {
 											title={card.nome}
 											id={index} />
 
-										<input type="file" id={index} onChange={handleFileChange} alt='' />
+										<input
+											type="file"
+											id={"Input" + index}
+											onChange={handleFileChange}
+											accept=".jpeg, .jpg"
+										/>
 									</div>
 
 									<CardContent className={classes.cardContent}>
@@ -210,8 +251,7 @@ export default function Servico() {
 													name="Nome"
 													label="Nome"
 													type="Nome"
-													id="Nome"
-													key={index}
+													id={"Nome" + index}
 													defaultValue={card.nome}
 													autoComplete="Nome"
 													onChange={handleChangeNome}
@@ -224,8 +264,7 @@ export default function Servico() {
 													name="Descricao"
 													label="Descrição"
 													type="Descricao"
-													id="Descricao"
-													key={index}
+													id={"Descricao" + index}
 													autoComplete="Descricao"
 													defaultValue={card.descricao}
 													multiline
@@ -240,8 +279,7 @@ export default function Servico() {
 													name="Valor"
 													label="Valor"
 													type="Valor"
-													id="Valor"
-													key={index}
+													id={"Valor" + index}
 													autoComplete="Valor"
 													defaultValue={card.valor}
 													onChange={handleChangeValor}
@@ -253,7 +291,7 @@ export default function Servico() {
 										<Button size="small" color="primary" id={index} onClick={handleFileUpload}>
 											Salvar
                     					</Button>
-										<Button size="small" color="secondary" id={index}>
+										<Button size="small" color="secondary" id={index} onClick={deleteCard}>
 											Apagar
                     					</Button>
 									</CardActions>
@@ -269,6 +307,7 @@ export default function Servico() {
 					<AddIcon />
 				</Fab>
 			</Tooltip>
+			<Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />
 		</div>
 	);
 }

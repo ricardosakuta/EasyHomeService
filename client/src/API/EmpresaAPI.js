@@ -21,11 +21,11 @@ export const add = (query) =>
 			return res.json()
 		} else {
 			return res.json().then((data) => {
-				let error      = new Error(res.status);
+				let error = new Error(res.status);
 				error.response = data;
-				error.status   = res.status;
+				error.status = res.status;
 				throw error;
-			  });
+			});
 		}
 	})
 
@@ -42,11 +42,11 @@ export const update = (id, query) =>
 			return res.json()
 		} else {
 			return res.json().then((data) => {
-				let error      = new Error(res.status);
+				let error = new Error(res.status);
 				error.response = data;
-				error.status   = res.status;
+				error.status = res.status;
 				throw error;
-			  });
+			});
 		}
 	})
 
