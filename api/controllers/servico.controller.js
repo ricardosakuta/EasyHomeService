@@ -18,6 +18,10 @@ exports.getAll = async (req, res) => {
                 throw error
             }
 
+            results.rows.forEach(element => {
+                element.imagem_url = element.imagem_url + "?" + new Date().getTime();
+            });
+
             res.status(200).json(results.rows)
         })
 }
@@ -86,9 +90,76 @@ exports.post = async (req, res) => {
     return res.status(400).send({ message: error.message })
 };
 
-exports.delete = async (req, res) => {
-    console.log(req.params.id + '/' + req.params.seq);
+exports.update = async (req, res) => {
+    const file = req.file
+    const { nome, descricao, valor, extensao } = req.body
+    let messageError = '';
 
+    const fileKey = 'EMP' + req.params.empresa_id + 'ID' + req.params.seq + '.' + extensao;
+
+    await pool.query(
+        `UPDATE servico 
+            SET nome = $1,
+            descricao = $2,
+            valor = $3
+            WHERE empresa_id = $4
+              AND seq = $5`,
+        [nome, descricao, valor, req.params.empresa_id, req.params.seq],
+        (error) => {
+            if (error) {
+                messageError = error.message;
+                return;
+            }
+        },
+    )
+
+    if (messageError) {
+        res.status(422).json({ message: messageError });
+        return;
+    }
+
+    if (!file) {
+        return res.send({ message: 'Serviço atualizado com sucesso!' });
+    }
+
+    try {
+        const fileContent = fs.readFileSync(file.path);
+
+        // Setting up S3 upload parameters
+        const params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: fileKey,
+            Body: fileContent
+        };
+
+        // Uploading files to the bucket
+        AwsConfig.s3.upload(params, function (err, data) {
+            if (err) {
+                throw err;
+            }
+
+            console.log(file.path);
+
+            pool.query(
+                'UPDATE servico SET imagem_url = $1 WHERE empresa_id = $2 AND seq = $3',
+                [data.Location, req.params.empresa_id, req.params.seq],
+                () => {
+                    fs.unlink(file.path, (err => {
+                        if (err) console.log(err);
+                    }));
+                }
+            )
+        });
+    } catch (error) {
+        return res.status(422).json({ message: "Erro ao atualizar a imagem" });
+    }
+
+    return res.send({ message: 'Serviço atualizado com sucesso!' });
+}, (error, req, res, next) => {
+    return res.status(400).send({ message: error.message })
+};
+
+exports.delete = async (req, res) => {
 	pool.query(
 		'DELETE FROM servico WHERE empresa_id=$1 and seq=$2',
 		[req.params.empresa_id, req.params.seq],

@@ -23,4 +23,6 @@ router.post('/', upload.single('upload'), servicoController.post);
 
 router.delete('/:empresa_id/:seq', servicoController.delete);
 
+router.put('/:empresa_id/:seq', upload.single('upload'), servicoController.update);
+
 module.exports = router;

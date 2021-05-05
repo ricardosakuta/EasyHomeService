@@ -21,6 +21,23 @@ export const add = (formData) =>
 		}
 	})
 
+export const update = (empresa_id, seq, formData) =>
+	fetch(`${process.env.REACT_APP_API_HOST}/servicos/${empresa_id}/${seq}`, {
+		method: 'PUT',
+		body: formData,
+	}).then(res => {
+		if (res.ok) {
+			return res.json()
+		} else {
+			return res.json().then((data) => {
+				let error = new Error(res.status);
+				error.response = data;
+				error.status = res.status;
+				throw error;
+			});
+		}
+	})
+
 export const deleteById = (empresa_id, seq) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/servicos/${empresa_id}/${seq}`, {
 		method: 'DELETE'

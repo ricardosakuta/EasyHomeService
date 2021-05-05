@@ -85,7 +85,6 @@ export default function Servico() {
 
 		if (idEmpresa > 0) {
 			getServicos();
-
 		}
 	}, [idEmpresa])
 
@@ -108,7 +107,8 @@ export default function Servico() {
 			descricao: '',
 			imagem_url: defatulURL,
 			valor: 0,
-			imagem: ''
+			imagem: '',
+			status: 'new'
 		}]);
 	}
 
@@ -124,10 +124,10 @@ export default function Servico() {
 		const id = e.currentTarget.id;
 		const formData = new FormData();
 
-		if (!id || !cards[id].selectedFile)
+		if (!id) {
+			console.log("Erro")
 			return;
-
-		formData.append("upload", cards[id].selectedFile);
+		}
 
 		formData.append("empresa_id", idEmpresa);
 
@@ -139,15 +139,31 @@ export default function Servico() {
 
 		formData.append("valor", cards[id].valor);
 
-		formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
+		if (cards[id].status === 'new') {
+			formData.append("upload", cards[id].selectedFile);
+			formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
 
-		ServicoAPI.add(formData)
+			ServicoAPI.add(formData)
 			.then(res => {
 				callAlert(0, res.message, alertID + 1);
 			}).catch(error => {
 				console.log(error);
 				callAlert(1, error.response.message, alertID + 1);
 			});
+		} else {
+			if (cards[id].selectedFile) {
+				formData.append("upload", cards[id].selectedFile);
+				formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
+			}
+
+			ServicoAPI.update(idEmpresa, cards[id].seq, formData)
+			.then(res => {
+				callAlert(0, res.message, alertID + 1);
+			}).catch(error => {
+				console.log(error);
+				callAlert(1, error.response.message, alertID + 1);
+			});
+		}
 	};
 
 	const handleChangeNome = (event) => {
