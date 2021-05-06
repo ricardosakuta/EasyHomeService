@@ -62,7 +62,7 @@ exports.update = async (req, res) => {
 		[nome, uf, req.params.id],
 		(error) => {
 			if (error) {
-				res.status(422).json({ message: error.message });
+				return res.status(422).json({ message: error.message });				
 			}
 			res.status(201).json({ status: 'success', message: 'Cidade atualizada com sucesso.' })
 		},
@@ -81,5 +81,3 @@ exports.delete = async (req, res) => {
 		}
 	)
 }
-
-

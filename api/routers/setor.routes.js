@@ -6,6 +6,8 @@ const setorController = require('../controllers/setor.controller')
 /* GET users listing. */
 router.get('/', setorController.getAll);
 
+router.get('/cidade/:id', setorController.getByCidade);
+
 router.post('/',
 	[
 		check('descricao').not().isEmpty().isLength({ min: 5, max: 255 }).trim(),

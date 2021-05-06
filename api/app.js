@@ -11,6 +11,7 @@ var usuario = require('./routers/usuario.routes')
 var historico = require('./routers/historico.routes')
 var servico = require('./routers/servico.routes')
 var authGoogle = require('./routers/authGoogle.routes')
+var empresa = require('./routers/empresa.routes')
 var session = require('express-session');
 
 var app = express();
@@ -22,9 +23,9 @@ app.set('view engine', 'jade');
 app.use(cors());
 
 app.use(session({
-    secret: '2C44-4D44-WppQ38S',
-    resave: true,
-    saveUninitialized: true
+	secret: '2C44-4D44-WppQ38S',
+	resave: true,
+	saveUninitialized: true
 }));
 
 app.use(logger('dev'));
@@ -45,14 +46,15 @@ app.use('/api/usuario', usuario);
 app.use('/api/historicos', historico);
 app.use('/api/servicos', servico);
 app.use('/api/auth/google', authGoogle);
+app.use('/api/empresas', empresa);
 
 // catch 404 and forward to error handler
-app.use(function(req, res) {
-	res.status(404).json({message: "Nenhum registro foi encontrado."})
+app.use(function (req, res) {
+	res.status(404).json({ message: "Nenhum registro foi encontrado." })
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
 	// set locals, only providing error in development
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};

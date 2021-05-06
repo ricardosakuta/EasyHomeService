@@ -6,10 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { makeStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import AddCircle from '@material-ui/icons/AddCircle';
 import * as CidadeAPI from '../../API/CidadeAPI';
 import Snackbars from '../Alert';
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,9 +65,12 @@ export default function AdicionarCidade(props) {
 
     return (
         <div>
-            <IconButton color="secondary" aria-label="Adicionar cidade" onClick={handleClickOpen}>
-                <AddCircle />
-            </IconButton>
+			<Tooltip title="Adicionar serviço" aria-label="Adicionar cidade" onClick={handleClickOpen}>
+				<Fab color="secondary">
+					<AddIcon />
+				</Fab>
+			</Tooltip>
+
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Editar</DialogTitle>
                 <DialogContent>

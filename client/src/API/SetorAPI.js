@@ -8,6 +8,10 @@ export const getAll = () =>
 	fetch(`${process.env.REACT_APP_API_HOST}/Setores`)
 		.then(res => res.json())
 
+export const getByCidade = (id) =>
+	fetch(`${process.env.REACT_APP_API_HOST}/Setores/cidade/${id}`)
+		.then(res => res.json())
+
 export const update = (id, query) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/Setores/${id}`, {
 		method: 'PUT',

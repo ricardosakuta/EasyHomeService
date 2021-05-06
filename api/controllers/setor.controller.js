@@ -15,6 +15,22 @@ exports.getAll = async (req, res) => {
 	})
 }
 
+exports.getByCidade = async (req, res) => {
+	pool.query(
+		`select s.id, s.descricao,  s.cidade_id, c.nome as cidade_nome, c.uf as cidade_uf
+		from setor s 
+		inner join cidade c on (c.id = s.cidade_id)
+		where c.id = $1
+		order by s.id`,
+		[req.params.id],
+		(error, results) => {
+		if (error) {
+			throw error
+		}
+		res.status(200).json(results.rows)
+	})
+}
+
 exports.add = async (req, res) => {
 	const errors = validationResult(req)
 

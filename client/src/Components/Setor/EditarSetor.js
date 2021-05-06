@@ -92,7 +92,7 @@ export default function EditarSetor(props) {
                         <br />
                         <TextField id="descricao" label="Descrcao" defaultValue={descricao} onChange={handleChange} />
                         <br />
-                        <InputLabel id="cidade_id">Código da cidade</InputLabel>
+                        <InputLabel id="cidade_id">Cidade</InputLabel>
                         <Select
                             labelId="cidade_id"
                             id="cidade_id"
