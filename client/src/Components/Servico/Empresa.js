@@ -76,7 +76,6 @@ export default function Empresa(props) {
 
         async function getEmpresa() {
             let response = await EmpresaAPI.getByCliente(authContext.idCliente);
-            console.log(response.nome)
             if (response) {
                 setId(response.id);
                 setNome(response.nome);
@@ -136,11 +135,6 @@ export default function Empresa(props) {
                 setor_id
             }).then(res => {
                 callAlert(0, res.message, alertID + 1);
-                setId(0);
-                setNome("");
-                setDescricao("");
-                setCidadeId(-1)
-                setSetorId(-1)
             }).catch(error => {
                 callAlert(1, error.response.message, alertID + 1);
             });
@@ -162,6 +156,11 @@ export default function Empresa(props) {
         EmpresaAPI.deleteById(id)
         .then(res => {
             callAlert(0, res.message, alertID + 1);
+            setId(0);
+            setNome("");
+            setDescricao("");
+            setCidadeId(-1)
+            setSetorId(-1)
         }).catch(error => {
             callAlert(1, error.response.message, alertID + 1);
         });

@@ -31,6 +31,9 @@ exports.post = async (req, res) => {
     const { empresa_id, seq, nome, descricao, valor, extensao } = req.body
     let messageError = '';
 
+    if (nome === "" || !descricao === "")
+        res.status(422).json({ message: "Dados incorretos!" });
+
     if (!file) {
         res.status(422).json({ message: "Favor inserir uma imagem válida!" });
         return;
@@ -97,6 +100,9 @@ exports.update = async (req, res) => {
 
     const fileKey = 'EMP' + req.params.empresa_id + 'ID' + req.params.seq + '.' + extensao;
 
+    if (nome === "" || descricao === "")
+        res.status(422).json({ message: "Dados incorretos!" });
+
     await pool.query(
         `UPDATE servico 
             SET nome = $1,
@@ -160,14 +166,14 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-	pool.query(
-		'DELETE FROM servico WHERE empresa_id=$1 and seq=$2',
-		[req.params.empresa_id, req.params.seq],
-		(error) => {
-			if (error) {
-				res.status(422).json({ message: error.message });
-			}
-			res.status(201).json({ status: 'success', message: 'Serviço apagado com sucesso.' })
-		},
-	)
+    pool.query(
+        'DELETE FROM servico WHERE empresa_id=$1 and seq=$2',
+        [req.params.empresa_id, req.params.seq],
+        (error) => {
+            if (error) {
+                res.status(422).json({ message: error.message });
+            }
+            res.status(201).json({ status: 'success', message: 'Serviço apagado com sucesso.' })
+        },
+    )
 }
