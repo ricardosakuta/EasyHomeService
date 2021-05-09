@@ -15,6 +15,7 @@ import AuthContext from '../Context/Auth';
 import GoogleLogin from 'react-google-login';
 import * as AuthAPI from '../API/AuthAPI';
 import Snackbars from '../Components/Alert';
+import * as usuarioAPI from '../API/UsuarioAPI';
 
 function Copyright() {
 	return (
@@ -58,45 +59,66 @@ export default function Acessar() {
 	const classes = useStyles();
 	const authContext = useContext(AuthContext);
 	const history = useHistory();
+	const [email, setEmail] = React.useState("");
+	const [senha, setSenha] = React.useState("");
 
-    const [mensagem, setMensagem] = React.useState('');
-    const [tipo, setTipo] = React.useState(0);
-    const [alertID, setalertID] = React.useState(0);
+	const [mensagem, setMensagem] = React.useState('');
+	const [tipo, setTipo] = React.useState(0);
+	const [alertID, setalertID] = React.useState(0);
 
-    const callAlert = (t, m, i) => {
-        setTipo(t);
-        setMensagem(m);
-        setalertID(i);
-    }
+	const callAlert = (t, m, i) => {
+		setTipo(t);
+		setMensagem(m);
+		setalertID(i);
+	}
 
 	const handleChangeEmail = (event) => {
 		const target = event.target
-		console.log(target.value)
+		setEmail(target.value)
 	}
 
 	const handleChangeSenha = (event) => {
 		const target = event.target
-		console.log(target.value)
+		setSenha(target.value)
 	}
 
-	const handleSubmit = () => {
-		console.log('Submit');
+	const handleSubmit = (event) => {
+		event.preventDefault();
+
+		usuarioAPI.login({
+			email,
+			senha
+		}).then(res => {
+			
+			if (res.email) {
+				callAlert(0, res.message, alertID + 1);
+				authContext.setEmail(res.email);
+				authContext.setNome(res.nome);
+				authContext.setIdCliente(res.id);
+				authContext.setPerfil(res.perfil);
+				history.push('/')
+			} else {
+				callAlert(1, res.message, alertID + 1);
+			}
+		}).catch(error => {
+			callAlert(1, 'Não foi possível efetuar o login.', alertID + 1);
+		});
 	}
 
 	const responseGoogleSucess = (res) => {
 		console.log(res);
 
-        AuthAPI.add(res)
-		.then(res => {
-			authContext.setEmail(res.email);
-			authContext.setNome(res.name);
-			authContext.setIdCliente(res.id);
-			authContext.setPerfil(res.perfil)
-            callAlert(0, res.message, alertID + 1);
-			history.push('/')
-        }).catch(error => {
-            callAlert(1, 'Erro genérico.', alertID + 1);
-        });
+		AuthAPI.add(res)
+			.then(res => {
+				authContext.setEmail(res.email);
+				authContext.setNome(res.name);
+				authContext.setIdCliente(res.id);
+				authContext.setPerfil(res.perfil)
+				callAlert(0, res.message, alertID + 1);
+				history.push('/')
+			}).catch(error => {
+				callAlert(1, 'Erro genérico.', alertID + 1);
+			});
 	}
 
 	const responseGoogleFailure = (res) => {

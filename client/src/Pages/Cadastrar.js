@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useHistory } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,6 +11,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import * as usuarioAPI from '../API/UsuarioAPI';
+import Snackbars from '../Components/Alert';
+import AuthContext from '../Context/Auth';
 
 function Copyright() {
 	return (
@@ -51,6 +55,71 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Cadastrar() {
 	const classes = useStyles();
+	const [email, setEmail] = React.useState("");
+	const [primeiroNome, setPrimeiroNome] = React.useState("");
+	const [sobrenome, setSobrenome] = React.useState("");
+	const [senha, setSenha] = React.useState("");
+	const [telefone, setTelefone] = React.useState("");
+	const authContext = useContext(AuthContext);
+	const history = useHistory();
+
+    const [mensagem, setMensagem] = React.useState('');
+    const [tipo, setTipo] = React.useState(0);
+    const [alertID, setalertID] = React.useState(0);
+
+    const callAlert = (t, m, i) => {
+        setTipo(t);
+        setMensagem(m);
+        setalertID(i);
+    }
+
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		const nome = primeiroNome + ' ' + sobrenome;
+
+		usuarioAPI.add({
+			email,
+			nome,
+			senha,
+			telefone
+		}).then(res => {
+			authContext.setEmail(res.email);
+			authContext.setNome(res.nome);
+			authContext.setIdCliente(res.id);
+			authContext.setPerfil(res.perfil);
+            callAlert(0, res.message, alertID + 1);
+			history.push('/')
+        }).catch(error => {
+			console.log(error);
+            callAlert(1, 'Erro ao cadastrar cliente.', alertID + 1);
+        });
+	}
+
+	const handleChangeEmail = (event) => {
+		const target = event.target;
+		setEmail(target.value);
+		console.log("email: " + email);
+	}
+
+	const handleChangePrimeiroNome = (event) => {
+		const target = event.target;
+		setPrimeiroNome(target.value);
+	}
+
+	const handleChangeSobrenome = (event) => {
+		const target = event.target;
+		setSobrenome(target.value);
+	}
+
+	const handleChangeSenha = (event) => {
+		const target = event.target;
+		setSenha(target.value);
+	}
+
+	const handleChangeTelefone = (event) => {
+		const target = event.target;
+		setTelefone(target.value);
+	}
 
 	return (
 		<Container component="main" maxWidth="xs">
@@ -74,6 +143,7 @@ export default function Cadastrar() {
 								id="firstName"
 								label="Nome"
 								autoFocus
+								onChange={handleChangePrimeiroNome}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={6}>
@@ -85,6 +155,7 @@ export default function Cadastrar() {
 								label="Sobrenome"
 								name="lastName"
 								autoComplete="lname"
+								onChange={handleChangeSobrenome}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -96,6 +167,7 @@ export default function Cadastrar() {
 								label="Email"
 								name="email"
 								autoComplete="email"
+								onChange={handleChangeEmail}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -108,6 +180,7 @@ export default function Cadastrar() {
 								type="password"
 								id="password"
 								autoComplete="current-password"
+								onChange={handleChangeSenha}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -119,6 +192,7 @@ export default function Cadastrar() {
 								type="phoneNumber"
 								id="phoneNumber"
 								autoComplete="phoneNumber"
+								onChange={handleChangeTelefone}
 							/>
 						</Grid>
 					</Grid>
@@ -128,6 +202,7 @@ export default function Cadastrar() {
 						variant="contained"
 						color="primary"
 						className={classes.submit}
+						onClick={handleSubmit}
 					>
 						Cadastrar
           			</Button>
@@ -136,6 +211,7 @@ export default function Cadastrar() {
 			<Box mt={5}>
 				<Copyright />
 			</Box>
+			<Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />
 		</Container>
 	);
 }
