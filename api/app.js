@@ -12,6 +12,7 @@ var historico = require('./routers/historico.routes')
 var servico = require('./routers/servico.routes')
 var authGoogle = require('./routers/authGoogle.routes')
 var empresa = require('./routers/empresa.routes')
+var curtida = require('./routers/curtida.routes')
 var session = require('express-session');
 
 var app = express();
@@ -47,6 +48,7 @@ app.use('/api/historicos', historico);
 app.use('/api/servicos', servico);
 app.use('/api/auth/google', authGoogle);
 app.use('/api/empresas', empresa);
+app.use('/api/curtida', curtida);
 
 // catch 404 and forward to error handler
 app.use(function (req, res) {

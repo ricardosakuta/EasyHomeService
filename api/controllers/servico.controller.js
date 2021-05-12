@@ -177,3 +177,31 @@ exports.delete = async (req, res) => {
         },
     )
 }
+
+exports.getByCidade = async (req, res) => {
+    pool.query(
+        `select s.*, e.nome as nome_empresa,
+        (
+			select count(*)
+			from curtida q
+			where q.empresa_id = s.empresa_id
+			  and q.seq = s.seq
+              and q.cliente_id = $1
+		) as curtiu
+		from servico s
+        join empresa e on (e.id = s.empresa_id)
+        where e.cidade_id = $2
+        order by s.seq`,
+        [req.params.id_cliente, req.params.id_cidade],
+        (error, results) => {
+            if (error) {
+                throw error
+            }
+
+            results.rows.forEach(element => {
+                element.imagem_url = element.imagem_url + "?" + new Date().getTime();
+            });
+
+            res.status(200).json(results.rows)
+        })
+}

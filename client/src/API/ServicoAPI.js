@@ -4,6 +4,14 @@ export const getAll = (idEmpresa) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/servicos/${idEmpresa}`)
 		.then(res => res.json())
 
+export const getByCidade = (cliente_id, cidade_id) =>
+	fetch(`${process.env.REACT_APP_API_HOST}/servicos/cidade/${cliente_id}/${cidade_id}`)
+		.then(res => res.json())
+
+export const getByCurtida = () =>
+	fetch(`${process.env.REACT_APP_API_HOST}/servicos/curtidas/${20}`)
+		.then(res => res.json())
+
 export const add = (formData) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/servicos`, {
 		method: 'POST',
