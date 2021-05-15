@@ -8,6 +8,10 @@ export const getByCidade = (cliente_id, cidade_id) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/servicos/cidade/${cliente_id}/${cidade_id}`)
 		.then(res => res.json())
 
+export const getByTexto = (cliente_id, texto) =>
+	fetch(`${process.env.REACT_APP_API_HOST}/servicos/buscar/${cliente_id}/${texto}`)
+		.then(res => res.json())
+
 export const getByCurtida = () =>
 	fetch(`${process.env.REACT_APP_API_HOST}/servicos/curtidas/${20}`)
 		.then(res => res.json())

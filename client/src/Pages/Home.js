@@ -89,12 +89,17 @@ export default function Home() {
 	}
 
 	const handleBuscar = (event) => {
+		async function getServicosByCidade(texto) {
+			let response = await ServicoAPI.getByTexto(authContext.idCliente, texto)
+			setCards(response);
+		}
+
 		const target = event.target;
 
 		clearTimeout(timer);
 
 		timer = setTimeout(() => {
-			console.log(target.value);
+			getServicosByCidade(target.value);
 		}, 1000);
 	}
 
