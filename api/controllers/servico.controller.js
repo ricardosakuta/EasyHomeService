@@ -181,7 +181,7 @@ exports.delete = async (req, res) => {
 exports.getByCidade = async (req, res) => {
     console.log("getByCidade");
     pool.query(
-        `select s.*, e.nome as nome_empresa,
+        `select s.*, e.nome as nome_empresa, e.telefone, e.cidade_id,
         (
 			select count(*)
 			from curtida q
@@ -211,7 +211,7 @@ exports.getByTexto = async (req, res) => {
     console.log("getByTexto");
     let text = '%' + req.params.texto +'%';
     pool.query(
-        `select s.*, e.nome as nome_empresa,
+        `select s.*, e.nome as nome_empresa, e.telefone, e.cidade_id,
         (
 			select count(*)
 			from curtida q

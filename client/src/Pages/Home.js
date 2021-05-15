@@ -51,21 +51,21 @@ export default function Home() {
 	const authContext = useContext(AuthContext);
 	let timer;
 
+	async function getServicosByCidade(clienteId, cidadeId) {
+		let response = await ServicoAPI.getByCidade(clienteId, cidadeId)
+		setCards(response);
+	}
+
+	async function getServicosByCurtida(clienteId) {
+		let response = await CurtidaAPI.getByCurtida(clienteId)
+		setCards(response);
+	}
+
 	useEffect(() => {
-		async function getServicosByCidade() {
-			let response = await ServicoAPI.getByCidade(authContext.idCliente, cidade_id)
-			setCards(response);
-		}
-
-		async function getServicosByCurtida() {
-			let response = await CurtidaAPI.getByCurtida(authContext.idCliente)
-			setCards(response);
-		}
-
 		if (cidade_id > 0) {
-			getServicosByCidade();
+			getServicosByCidade(authContext.idCliente, cidade_id);
 		} else {
-			getServicosByCurtida();
+			getServicosByCurtida(authContext.idCliente);
 		}
 	}, [cidade_id, authContext.idCliente])
 
@@ -99,7 +99,13 @@ export default function Home() {
 		clearTimeout(timer);
 
 		timer = setTimeout(() => {
-			getServicosByCidade(target.value);
+			if (target.value !== "")
+				getServicosByCidade(target.value)
+			else if (cidade_id > 0) {
+				getServicosByCidade(authContext.idCliente, cidade_id);
+			} else {
+				getServicosByCurtida(authContext.idCliente);
+			}
 		}, 1000);
 	}
 
@@ -123,6 +129,7 @@ export default function Home() {
 			}
 
 			setCards(newCards);
+			console.log(cards)
 		}
 	}
 
@@ -154,17 +161,27 @@ export default function Home() {
 					<CardHeader
 						avatar={
 							<Avatar aria-label="recipe" className={classes.avatar}>
-								R
+								{card.nome_empresa.charAt(0)}
 					  			</Avatar>
 						}
 						title={card.nome_empresa + ' ' + card.nome}
-						subheader="Contato: (92) 98110-1987"
+						subheader={"Contato: " + card.telefone}
 					/>
 					<CardMedia
 						className={classes.media}
 						image={card.imagem_url}
 						title="Paella dish"
 					/>
+					<CardContent>
+						<Typography variant="body2" color="textSecondary" component="p">
+							{cidades.find(e => e.id === card.cidade_id) ? (
+								cidades.find(e => e.id === card.cidade_id).nome
+							):(
+								console.log(cidades)
+							)}
+							
+						</Typography>
+					</CardContent>
 					<CardContent>
 						<Typography variant="body2" color="textSecondary" component="p">
 							{card.descricao}
@@ -177,7 +194,7 @@ export default function Home() {
 					</CardContent>
 					<CardActions disableSpacing>
 						<IconButton
-							aria-label="add to favorites"
+							aria-label="Curtir"
 							id={index}
 							onClick={handleCurtir}>
 								

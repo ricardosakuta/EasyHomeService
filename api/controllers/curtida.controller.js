@@ -11,7 +11,7 @@ exports.getByQuantidade = async (req, res) => {
     console.log("cliente_id" + cliente_id);
 
     pool.query(
-        `select count(*) as qtd, s.*, e.nome as nome_empresa,
+        `select count(*) as qtd, s.*, e.nome as nome_empresa, e.telefone, e.cidade_id,
         (
 			select count(*)
 			from curtida q
@@ -22,7 +22,7 @@ exports.getByQuantidade = async (req, res) => {
 		from curtida c
         join servico s on (s.empresa_id = c.empresa_id and s.seq = c.seq)
         join empresa e on (e.id = s.empresa_id)
-        group by s.empresa_id, s.seq, e.nome
+        group by s.empresa_id, s.seq, e.nome, e.telefone, e.cidade_id
         order by qtd`,
         [cliente_id],
         (error, results) => {
@@ -40,7 +40,7 @@ exports.getByQuantidade = async (req, res) => {
 
 exports.getBycliente = async (req, res) => {
     pool.query(
-        `select s.*, e.nome as nome_empresa
+        `select s.*, e.nome as nome_empresa, e.telefone, e.cidade_id,
 		from curtida c
         join  servico s on (s.empresa_id = c.empresa_id and s.seq = c.seq)
         join empresa e on (e.id = s.empresa_id)

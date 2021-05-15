@@ -10,3 +10,5 @@ CREATE TABLE curtida (
         FOREIGN KEY(cliente_id) 
 	    REFERENCES cliente(id)
 );
+
+ALTER TABLE empresa ADD COLUMN telefone varchar;

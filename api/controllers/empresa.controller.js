@@ -21,7 +21,7 @@ exports.add = async (req, res) => {
 		});
 	}
 
-	const { nome, descricao, cliente_id, cidade_id, setor_id } = req.body
+	const { nome, descricao, cliente_id, cidade_id, setor_id, telefone } = req.body
 
 	pool.query('SELECT * FROM empresa WHERE nome = $1', [nome], (error, results) => {
 		if (results.rowCount > 0) {
@@ -29,8 +29,8 @@ exports.add = async (req, res) => {
 			return;
 		} else {
 			pool.query(
-				'INSERT INTO empresa (nome, descricao, cliente_id, cidade_id, setor_id) VALUES ($1, $2, $3, $4, $5)',
-				[nome, descricao, cliente_id, cidade_id, setor_id],
+				'INSERT INTO empresa (nome, descricao, cliente_id, cidade_id, setor_id, telefone) VALUES ($1, $2, $3, $4, $5, $6)',
+				[nome, descricao, cliente_id, cidade_id, setor_id, telefone],
 				(error) => {
 					if (error) {
 						res.status(422).json({ message: error.message });
@@ -53,7 +53,7 @@ exports.update = async (req, res) => {
 		});
 	}
 
-	const { nome, descricao, cliente_id, cidade_id, setor_id } = req.body
+	const { nome, descricao, cliente_id, cidade_id, setor_id, telefone } = req.body
 
 	pool.query('SELECT * FROM empresa WHERE id = $1', [req.params.id], (error, results) => {
 		if (results.rowCount = 0) {
@@ -66,9 +66,10 @@ exports.update = async (req, res) => {
 					descricao = $2,
 					cliente_id = $3,
 					cidade_id = $4,
-					setor_id = $5
+					setor_id = $5,
+					telefone = $7
 				where id = $6`,
-				[nome, descricao, cliente_id, cidade_id, setor_id, req.params.id],
+				[nome, descricao, cliente_id, cidade_id, setor_id, req.params.id, telefone],
 				(error) => {
 					if (error) {
 						res.status(422).json({ message: error.message });
@@ -83,23 +84,37 @@ exports.update = async (req, res) => {
 
 exports.delete = async (req, res) => {
 	pool.query(
-		'DELETE FROM servico WHERE empresa_id=$1',
+		'DELETE FROM curtida WHERE empresa_id=$1',
 		[req.params.id],
 		(error) => {
 			if (error) {
+				console.log(1);
 				return res.status(422).json({ message: error.message });
+			} else {
+				pool.query(
+					'DELETE FROM servico WHERE empresa_id=$1',
+					[req.params.id],
+					(error) => {
+						if (error) {
+							console.log(2);
+							res.status(422).json({ message: error.message });
+						} else {
+							pool.query(
+								'DELETE FROM empresa WHERE id=$1',
+								[req.params.id],
+								(error) => {
+									if (error) {
+										console.log(3);
+										return res.status(422).json({ message: error.message });
+									}
+									res.status(201).json({ status: 'success', message: 'Empresa apagada com sucesso.' })
+								}
+							)
+						}
+					},
+				)
 			}
 		}
 	)
 
-	pool.query(
-		'DELETE FROM empresa WHERE id=$1',
-		[req.params.id],
-		(error) => {
-			if (error) {
-				return res.status(422).json({ message: error.message });
-			}
-			res.status(201).json({ status: 'success', message: 'Empresa apagada com sucesso.' })
-		}
-	)
 }
