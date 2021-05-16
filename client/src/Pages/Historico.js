@@ -14,6 +14,7 @@ import FavoriteRoundedIcon from '@material-ui/icons/FavoriteRounded';
 import * as CidadeAPI from '../API/CidadeAPI';
 import * as CurtidaAPI from '../API/CurtidaAPI';
 import AuthContext from '../Context/Auth';
+import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -49,11 +50,12 @@ export default function Histórico() {
     const [cidades, setCidades] = React.useState([]);
     const authContext = useContext(AuthContext);
 
+    async function getServicosByCurtida(clienteId) {
+        let response = await CurtidaAPI.getByCliente(clienteId)
+        setCards(response);
+    }
+
     useEffect(() => {
-        async function getServicosByCurtida(clienteId) {
-            let response = await CurtidaAPI.getByCurtida(clienteId)
-            setCards(response);
-        }
         getServicosByCurtida(authContext.idCliente);
     }, [authContext.idCliente])
 
@@ -63,11 +65,6 @@ export default function Histórico() {
             setCidades(response)
         }
 
-        async function getServicos() {
-            setCards([])
-        }
-
-        getServicos();
         getCidades();
     }, [])
 
@@ -97,57 +94,65 @@ export default function Histórico() {
 
     return (
         <div className={classes.center}>
-            {cards.map((card, index) => (
-                <Card className={classes.root} key={card.empresa_id + card.seq}>
+            {cards && cards.length > 0 ? (
+                cards.map((card, index) => (
+                    <Card className={classes.root} key={card.empresa_id + card.seq}>
 
-                    <CardHeader
-                        avatar={
-                            <Avatar aria-label="recipe" className={classes.avatar}>
-                                {card.nome_empresa.charAt(0)}
-                            </Avatar>
-                        }
-                        title={card.nome_empresa + ' ' + card.nome}
-                        subheader={"Contato: " + card.telefone}
-                    />
-                    <CardMedia
-                        className={classes.media}
-                        image={card.imagem_url}
-                        title="Paella dish"
-                    />
-                    <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {cidades.find(e => e.id === card.cidade_id) ? (
-                                cidades.find(e => e.id === card.cidade_id).nome
-                            ) : (
-                                console.log(cidades)
-                            )}
-                        </Typography>
-                    </CardContent>
-                    <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {card.descricao}
-                        </Typography>
-                    </CardContent>
-                    <CardContent>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                            {'R$' + card.valor}
-                        </Typography>
-                    </CardContent>
-                    <CardActions disableSpacing>
-                        <IconButton
-                            aria-label="Curtir"
-                            id={index}
-                            onClick={handleCurtir}>
+                        <CardHeader
+                            avatar={
+                                <Avatar aria-label="recipe" className={classes.avatar}>
+                                    {card.nome_empresa.charAt(0)}
+                                </Avatar>
+                            }
+                            title={card.nome_empresa + ' ' + card.nome}
+                            subheader={"Contato: " + card.telefone}
+                        />
+                        <CardMedia
+                            className={classes.media}
+                            image={card.imagem_url}
+                            title="Paella dish"
+                        />
+                        <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                {cidades.find(e => e.id === card.cidade_id) ? (
+                                    cidades.find(e => e.id === card.cidade_id).nome
+                                ) : (
+                                    console.log(cidades)
+                                )}
+                            </Typography>
+                        </CardContent>
+                        <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                {card.descricao}
+                            </Typography>
+                        </CardContent>
+                        <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                {'R$' + card.valor}
+                            </Typography>
+                        </CardContent>
+                        <CardActions disableSpacing>
+                            <IconButton
+                                aria-label="Curtir"
+                                id={index}
+                                onClick={handleCurtir}>
 
-                            {card.curtiu > 0 ? (
-                                <FavoriteRoundedIcon color="secondary" />
-                            ) : (
-                                <FavoriteIcon />
-                            )}
-                        </IconButton>
-                    </CardActions>
-                </Card>
-            ))}
+                                {card.curtiu > 0 ? (
+                                    <FavoriteRoundedIcon color="secondary" />
+                                ) : (
+                                    <FavoriteIcon />
+                                )}
+                            </IconButton>
+                        </CardActions>
+                    </Card>
+                ))
+            ) : (
+                <Container className={classes.cardGrid} maxWidth="md">
+                    <Typography variant="body2" color="textSecondary" component="p">
+                        Não foi encontrado nenhum histórico de curtidas!
+                    </Typography>
+                </Container>
+            )}
         </div>
     );
 }

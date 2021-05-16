@@ -41,8 +41,15 @@ exports.getByQuantidade = async (req, res) => {
 exports.getBycliente = async (req, res) => {
     pool.query(
         `select s.*, e.nome as nome_empresa, e.telefone, e.cidade_id,
+        (
+			select count(*)
+			from curtida q
+			where q.empresa_id = s.empresa_id
+			  and q.seq = s.seq
+              and q.cliente_id = $1
+		) as curtiu
 		from curtida c
-        join  servico s on (s.empresa_id = c.empresa_id and s.seq = c.seq)
+        join servico s on (s.empresa_id = c.empresa_id and s.seq = c.seq)
         join empresa e on (e.id = s.empresa_id)
         where c.cliente_id = $1`,
         [req.params.cliente_id],

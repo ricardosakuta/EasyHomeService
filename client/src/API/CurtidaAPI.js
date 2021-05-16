@@ -1,5 +1,9 @@
 require('dotenv').config()
 
+export const getByCliente = (cliente_id) =>
+	fetch(`${process.env.REACT_APP_API_HOST}/curtida/${cliente_id}`)
+		.then(res => res.json())
+
 export const getByCurtida = (cliente_id) =>
 	fetch(`${process.env.REACT_APP_API_HOST}/curtida/quantidade/${cliente_id}`)
 		.then(res => res.json())
