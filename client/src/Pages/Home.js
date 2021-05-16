@@ -23,9 +23,12 @@ import AuthContext from '../Context/Auth';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		margin: theme.spacing(1),
-		maxWidth: 600,
-		textAlign: 'left',
+        margin: theme.spacing(1),
+        maxWidth: 600,
+        textAlign: 'left',
+        verticalAlign: 'middle',
+        display: 'inline-block',
+        width: '100%'
 	},
 	media: {
 		paddingTop: '56.25%', // 16:9
@@ -41,6 +44,12 @@ const useStyles = makeStyles((theme) => ({
 	cidade: {
 		textAlign: 'center'
 	},
+    center: {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        display: 'inline-block',
+        width: '100%'
+    },
 }));
 
 export default function Home() {
@@ -134,7 +143,7 @@ export default function Home() {
 	}
 
 	return (
-		<div>
+		<div className={classes.center}>
 			<Select
 				fullWidth
 				className={classes.cidade}
@@ -179,7 +188,6 @@ export default function Home() {
 							):(
 								console.log(cidades)
 							)}
-							
 						</Typography>
 					</CardContent>
 					<CardContent>
