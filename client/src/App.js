@@ -9,6 +9,7 @@ import Setor from './Pages/Setor';
 import Acessar from './Pages/Acessar'
 import Cadastrar from './Pages/Cadastrar'
 import Perfil from './Pages/Perfil'
+import Relatorio from './Pages/Relatorio'
 import SidebarMenu from './Components/SidebarMenu';
 import AuthContext from './Context/Auth';
 
@@ -78,6 +79,9 @@ export default function App() {
 				)} />
 				<Route exact path='/perfil' render={() => (
 					<SidebarMenu page={<Perfil />} />
+				)} />
+				<Route exact path='/relatorio' render={() => (
+					<SidebarMenu page={<Relatorio />} />
 				)} />
 			</AuthContext.Provider>
 		</div>

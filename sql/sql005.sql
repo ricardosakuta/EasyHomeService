@@ -11,8 +11,6 @@ CREATE TABLE curtida (
 	    REFERENCES cliente(id)
 );
 
-ALTER TABLE empresa ADD COLUMN telefone varchar;
-
 CREATE TABLE comentario (
     empresa_id integer not null,
     seq_servico integer not null,
@@ -27,3 +25,7 @@ CREATE TABLE comentario (
         FOREIGN KEY(cliente_id) 
 	    REFERENCES cliente(id)
 );
+
+ALTER TABLE empresa ADD COLUMN telefone varchar;
+ALTER TABLE cliente ADD COLUMN data_criacao date;
+ALTER TABLE servico ADD COLUMN data_criacao date;
