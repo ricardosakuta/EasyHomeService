@@ -92,7 +92,7 @@ exports.delete = async (req, res) => {
 				return res.status(422).json({ message: error.message });
 			} else {
 				pool.query(
-					'DELETE FROM servico WHERE empresa_id=$1',
+					'DELETE FROM comentario WHERE empresa_id=$1',
 					[req.params.id],
 					(error) => {
 						if (error) {
@@ -100,14 +100,25 @@ exports.delete = async (req, res) => {
 							res.status(422).json({ message: error.message });
 						} else {
 							pool.query(
-								'DELETE FROM empresa WHERE id=$1',
+								'DELETE FROM servico WHERE empresa_id=$1',
 								[req.params.id],
 								(error) => {
 									if (error) {
 										console.log(3);
 										return res.status(422).json({ message: error.message });
+									} else {
+										pool.query(
+											'DELETE FROM empresa WHERE id=$1',
+											[req.params.id],
+											(error) => {
+												if (error) {
+													console.log(3);
+													return res.status(422).json({ message: error.message });
+												}
+												res.status(201).json({ status: 'success', message: 'Empresa apagada com sucesso.' })
+											}
+										)
 									}
-									res.status(201).json({ status: 'success', message: 'Empresa apagada com sucesso.' })
 								}
 							)
 						}

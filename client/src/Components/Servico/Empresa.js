@@ -165,6 +165,7 @@ export default function Empresa(props) {
             setDescricao("");
             setCidadeId(-1)
             setSetorId(-1)
+            setTelefone("")
         }).catch(error => {
             callAlert(1, error.response.message, alertID + 1);
         });
