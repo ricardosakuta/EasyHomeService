@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -13,8 +14,13 @@ import FavoriteIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteRoundedIcon from '@material-ui/icons/FavoriteRounded';
 import * as CidadeAPI from '../API/CidadeAPI';
 import * as CurtidaAPI from '../API/CurtidaAPI';
+import * as ComentarioAPI from '../API/ComentarioAPI';
 import AuthContext from '../Context/Auth';
 import Container from '@material-ui/core/Container';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -42,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'inline-block',
         width: '100%'
     },
+    btn: {
+        margin: theme.spacing(1),
+    },
 }));
 
 export default function Histórico() {
@@ -49,10 +58,19 @@ export default function Histórico() {
     const [cards, setCards] = useState([]);
     const [cidades, setCidades] = React.useState([]);
     const authContext = useContext(AuthContext);
+    const [expanded, setExpanded] = React.useState(false);
+    const [comentario, setComentario] = React.useState("");
 
     async function getServicosByCurtida(clienteId) {
         let response = await CurtidaAPI.getByCliente(clienteId)
         setCards(response);
+    }
+
+    async function getComentarios(id) {
+        let newCards = [...cards];
+        let response = await ComentarioAPI.getAll(newCards[id].empresa_id, newCards[id].seq);
+        newCards[id].comentarios = response;
+        setCards([...newCards]);
     }
 
     useEffect(() => {
@@ -68,8 +86,17 @@ export default function Histórico() {
         getCidades();
     }, [])
 
-    const handleCurtir = (event) => {
+    const handleExpandClick = (event) => {
+        setExpanded(!expanded);
 
+        if (expanded)
+            return;
+
+        let id = event.currentTarget.id
+        getComentarios(id);
+    };
+
+    const handleCurtir = (event) => {
         if (authContext.idCliente > 0) {
             let newCards = [...cards];
             let id = event.currentTarget.id
@@ -90,6 +117,33 @@ export default function Histórico() {
             setCards(newCards);
             console.log(cards)
         }
+    }
+
+    const handleChangeComentario = (event) => {
+        const target = event.target;
+        setComentario(target.value);
+    }
+
+    const handleEnviarComentario = (event) => {
+        let id = event.currentTarget.id;
+        let card = cards[id];
+        let newCards = [...cards];
+
+        console.log("AuthContext.idcliente: " + authContext.idCliente);
+
+        let newComentario = {
+            empresa_id: card.empresa_id,
+            seq_servico: card.seq,
+            texto: comentario,
+            cliente_id: authContext.idCliente,
+            nome_cliente: authContext.nome
+        };
+
+        ComentarioAPI.add(newComentario);
+
+        newCards[id].comentarios = ([newComentario, ...newCards[id].comentarios]);
+        setCards([...newCards]);
+        setComentario('');
     }
 
     return (
@@ -143,7 +197,55 @@ export default function Histórico() {
                                     <FavoriteIcon />
                                 )}
                             </IconButton>
+                            <IconButton
+                                className={clsx(classes.expand, {
+                                    [classes.expandOpen]: expanded,
+                                })}
+                                onClick={handleExpandClick}
+                                id={index}
+                                aria-expanded={expanded}
+                                aria-label="show more"
+                            >
+                                <ExpandMoreIcon />
+                            </IconButton>
                         </CardActions>
+                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+                            <CardContent>
+                                <TextField
+                                    variant="outlined"
+                                    fullWidth
+                                    name="Comentar"
+                                    label="Comentar"
+                                    type="Comentar"
+                                    id="Comentar"
+                                    autoComplete="Comentar"
+                                    value={comentario}
+                                    multiline
+                                    rows={3}
+                                    onChange={handleChangeComentario}
+                                />
+                                <Button size="small" className={classes.btn} id={index} onClick={handleEnviarComentario}>
+                                    Enviar
+                                </Button>
+                                {
+                                    card.comentarios && card.comentarios.length > 0 ? (
+                                        card.comentarios.map((e) => (
+                                            <CardHeader
+                                                avatar={
+                                                    <Avatar aria-label="recipe" className={classes.avatar}>
+                                                        {e.nome_cliente.charAt(0)}
+                                                    </Avatar>
+                                                }
+                                                title={e.nome_cliente}
+                                                subheader={e.texto}
+                                            />
+                                        ))
+                                    ) : (
+                                        <Typography paragraph>Nenhum comentário foi feito.</Typography>
+                                    )
+                                }
+                            </CardContent>
+                        </Collapse>
                     </Card>
                 ))
             ) : (
@@ -153,6 +255,8 @@ export default function Histórico() {
                     </Typography>
                 </Container>
             )}
+
+
         </div>
     );
 }

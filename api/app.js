@@ -13,6 +13,7 @@ var servico = require('./routers/servico.routes')
 var authGoogle = require('./routers/authGoogle.routes')
 var empresa = require('./routers/empresa.routes')
 var curtida = require('./routers/curtida.routes')
+var comentario = require('./routers/comentario.routes')
 var session = require('express-session');
 
 var app = express();
@@ -49,6 +50,7 @@ app.use('/api/servicos', servico);
 app.use('/api/auth/google', authGoogle);
 app.use('/api/empresas', empresa);
 app.use('/api/curtida', curtida);
+app.use('/api/comentario', comentario);
 
 // catch 404 and forward to error handler
 app.use(function (req, res) {
