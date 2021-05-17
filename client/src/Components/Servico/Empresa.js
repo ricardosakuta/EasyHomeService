@@ -53,6 +53,7 @@ export default function Empresa(props) {
     const [cidades, setCidades] = React.useState([]);
     const [nome, setNome] = React.useState("");
     const [descricao, setDescricao] = React.useState("");
+    const [telefone, setTelefone] = React.useState("");
     const authContext = useContext(AuthContext);
     const [mensagem, setMensagem] = React.useState('');
     const [tipo, setTipo] = React.useState(0);
@@ -76,13 +77,13 @@ export default function Empresa(props) {
 
         async function getEmpresa() {
             let response = await EmpresaAPI.getByCliente(authContext.idCliente);
-            console.log(response.nome)
             if (response) {
                 setId(response.id);
                 setNome(response.nome);
                 setDescricao(response.descricao);
-                setCidadeId(response.cidade_id)
-                setSetorId(response.setor_id)
+                setCidadeId(response.cidade_id);
+                setSetorId(response.setor_id);
+                setTelefone(response.telefone)
             }
         }
 
@@ -121,7 +122,8 @@ export default function Empresa(props) {
                 descricao,
                 cliente_id,
                 cidade_id,
-                setor_id
+                setor_id,
+                telefone
             }).then(res => {
                 callAlert(0, res.message, alertID + 1);
             }).catch(error => {
@@ -133,14 +135,10 @@ export default function Empresa(props) {
                 descricao,
                 cliente_id,
                 cidade_id,
-                setor_id
+                setor_id,
+                telefone
             }).then(res => {
                 callAlert(0, res.message, alertID + 1);
-                setId(0);
-                setNome("");
-                setDescricao("");
-                setCidadeId(-1)
-                setSetorId(-1)
             }).catch(error => {
                 callAlert(1, error.response.message, alertID + 1);
             });
@@ -162,9 +160,20 @@ export default function Empresa(props) {
         EmpresaAPI.deleteById(id)
         .then(res => {
             callAlert(0, res.message, alertID + 1);
+            setId(0);
+            setNome("");
+            setDescricao("");
+            setCidadeId(-1)
+            setSetorId(-1)
+            setTelefone("")
         }).catch(error => {
             callAlert(1, error.response.message, alertID + 1);
         });
+    }
+
+    const handleChangeTelefone = (event) => {
+        const target = event.target;
+        setTelefone(target.value);
     }
 
     return (
@@ -202,6 +211,20 @@ export default function Empresa(props) {
                                 multiline
                                 rows={3}
                                 onChange={handleChangeDescricao}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                fullWidth
+                                name="Telefone"
+                                label="Telefone"
+                                type="Telefone"
+                                id="Telefone"
+                                autoComplete="Telefone"
+                                value={telefone}
+                                rows={3}
+                                onChange={handleChangeTelefone}
                             />
                         </Grid>
                     </Grid>

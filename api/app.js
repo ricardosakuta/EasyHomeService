@@ -4,14 +4,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-var setor = require('./routers/setor.routes')
-var buscar = require('./routers/buscar.routes')
-var cidade = require('./routers/cidade.routes')
-var usuario = require('./routers/usuario.routes')
-var historico = require('./routers/historico.routes')
-var servico = require('./routers/servico.routes')
-var authGoogle = require('./routers/authGoogle.routes')
-var empresa = require('./routers/empresa.routes')
+var setor = require('./routers/setor.routes');
+var buscar = require('./routers/buscar.routes');
+var cidade = require('./routers/cidade.routes');
+var usuario = require('./routers/usuario.routes');
+var servico = require('./routers/servico.routes');
+var authGoogle = require('./routers/authGoogle.routes');
+var empresa = require('./routers/empresa.routes');
+var curtida = require('./routers/curtida.routes');
+var comentario = require('./routers/comentario.routes');
+var relatorio = require('./routers/relatorio.routes');
 var session = require('express-session');
 
 var app = express();
@@ -43,10 +45,12 @@ app.use('/api/setores', setor);
 app.use('/api/buscar', buscar);
 app.use('/api/cidades', cidade);
 app.use('/api/usuario', usuario);
-app.use('/api/historicos', historico);
 app.use('/api/servicos', servico);
 app.use('/api/auth/google', authGoogle);
 app.use('/api/empresas', empresa);
+app.use('/api/curtida', curtida);
+app.use('/api/comentario', comentario);
+app.use('/api/relatorio', relatorio);
 
 // catch 404 and forward to error handler
 app.use(function (req, res) {

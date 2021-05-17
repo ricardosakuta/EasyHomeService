@@ -31,6 +31,9 @@ exports.post = async (req, res) => {
     const { empresa_id, seq, nome, descricao, valor, extensao } = req.body
     let messageError = '';
 
+    if (nome === "" || !descricao === "")
+        res.status(422).json({ message: "Dados incorretos!" });
+
     if (!file) {
         res.status(422).json({ message: "Favor inserir uma imagem válida!" });
         return;
@@ -97,6 +100,9 @@ exports.update = async (req, res) => {
 
     const fileKey = 'EMP' + req.params.empresa_id + 'ID' + req.params.seq + '.' + extensao;
 
+    if (nome === "" || descricao === "")
+        res.status(422).json({ message: "Dados incorretos!" });
+
     await pool.query(
         `UPDATE servico 
             SET nome = $1,
@@ -160,14 +166,75 @@ exports.update = async (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-	pool.query(
-		'DELETE FROM servico WHERE empresa_id=$1 and seq=$2',
-		[req.params.empresa_id, req.params.seq],
-		(error) => {
-			if (error) {
-				res.status(422).json({ message: error.message });
-			}
-			res.status(201).json({ status: 'success', message: 'Serviço apagado com sucesso.' })
-		},
-	)
+    pool.query(
+        'DELETE FROM servico WHERE empresa_id=$1 and seq=$2',
+        [req.params.empresa_id, req.params.seq],
+        (error) => {
+            if (error) {
+                res.status(422).json({ message: error.message });
+            }
+            res.status(201).json({ status: 'success', message: 'Serviço apagado com sucesso.' })
+        },
+    )
+}
+
+exports.getByCidade = async (req, res) => {
+    console.log("getByCidade");
+    pool.query(
+        `select s.*, e.nome as nome_empresa, e.telefone, e.cidade_id,
+        (
+			select count(*)
+			from curtida q
+			where q.empresa_id = s.empresa_id
+			  and q.seq = s.seq
+              and q.cliente_id = $1
+		) as curtiu
+		from servico s
+        join empresa e on (e.id = s.empresa_id)
+        where e.cidade_id = $2
+        order by s.seq`,
+        [req.params.id_cliente, req.params.id_cidade],
+        (error, results) => {
+            if (error) {
+                throw error
+            }
+
+            results.rows.forEach(element => {
+                element.imagem_url = element.imagem_url + "?" + new Date().getTime();
+            });
+
+            res.status(200).json(results.rows)
+        })
+}
+
+exports.getByTexto = async (req, res) => {
+    console.log("getByTexto");
+    let text = '%' + req.params.texto +'%';
+    pool.query(
+        `select s.*, e.nome as nome_empresa, e.telefone, e.cidade_id,
+        (
+			select count(*)
+			from curtida q
+			where q.empresa_id = s.empresa_id
+			  and q.seq = s.seq
+              and q.cliente_id = $1
+		) as curtiu
+		from servico s
+        join empresa e on (e.id = s.empresa_id)
+        where e.nome LIKE $2
+           or s.nome LIKE $2
+           or s.descricao LIKE $2
+        order by s.seq`,
+        [req.params.id_cliente, text],
+        (error, results) => {
+            if (error) {
+                throw error
+            }
+
+            results.rows.forEach(element => {
+                element.imagem_url = element.imagem_url + "?" + new Date().getTime();
+            });
+
+            res.status(200).json(results.rows)
+        })
 }

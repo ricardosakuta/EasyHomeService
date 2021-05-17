@@ -19,6 +19,10 @@ const upload = multer({
 /* GET users listing. */
 router.get('/:id', servicoController.getAll);
 
+router.get('/cidade/:id_cliente/:id_cidade', servicoController.getByCidade);
+
+router.get('/buscar/:id_cliente/:texto', servicoController.getByTexto);
+
 router.post('/', upload.single('upload'), servicoController.post);
 
 router.delete('/:empresa_id/:seq', servicoController.delete);

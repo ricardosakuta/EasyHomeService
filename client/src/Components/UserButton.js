@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import AuthContext from '../Context/Auth';
 import Snackbars from '../Components/Alert';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -18,6 +19,16 @@ const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginRight: theme.spacing(2),
 	},
+	center: {
+        textAlign: 'center',
+        verticalAlign: 'middle',
+        display: 'inline-block',
+        width: '100%'
+	},
+	hello: {
+		padding: '10px',
+		fontWeight: 'bold'
+	}
 }));
 
 export default function MenuListComposition() {
@@ -27,15 +38,15 @@ export default function MenuListComposition() {
 	const authContext = useContext(AuthContext);
 	const history = useHistory();
 
-    const [mensagem, setMensagem] = React.useState('');
-    const [tipo, setTipo] = React.useState(0);
-    const [alertID, setalertID] = React.useState(0);
+	const [mensagem, setMensagem] = React.useState('');
+	const [tipo, setTipo] = React.useState(0);
+	const [alertID, setalertID] = React.useState(0);
 
-    const callAlert = (t, m, i) => {
-        setTipo(t);
-        setMensagem(m);
-        setalertID(i);
-    }
+	const callAlert = (t, m, i) => {
+		setTipo(t);
+		setMensagem(m);
+		setalertID(i);
+	}
 
 	const handleToggle = () => {
 		setOpen((prevOpen) => !prevOpen);
@@ -96,9 +107,14 @@ export default function MenuListComposition() {
 						>
 							<Paper>
 								<ClickAwayListener onClickAway={handleClose}>
-									<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-										<MenuItem onClick={handleLogout}>Logout</MenuItem>
-									</MenuList>
+									<div>
+										<Typography className={classes.hello} variant="body2" color="textSecondary" component="p">
+											{'Olá, ' + authContext.nome}
+										</Typography>
+										<MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+											<MenuItem className={classes.center} onClick={handleLogout}>Logout</MenuItem>
+										</MenuList>
+									</div>
 								</ClickAwayListener>
 							</Paper>
 						</Grow>

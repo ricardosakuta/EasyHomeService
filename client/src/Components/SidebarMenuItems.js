@@ -9,6 +9,7 @@ import List from '@material-ui/icons/List';
 import LocationCity from '@material-ui/icons/LocationCity';
 import Build from '@material-ui/icons/Build';
 import Work from '@material-ui/icons/Work';
+import Graphic from '@material-ui/icons/BarChart';
 import AccountBox from '@material-ui/icons/AccountBox';
 import useStyles from '.././Style/MenuUseStyles';
 import AuthContext from '../Context/Auth';
@@ -67,6 +68,13 @@ export default function SidebarMenuItems() {
                         <Work />
                     </ListItemIcon>
                     <ListItemText disableTypography className={classes.SideBarFont} primary="Setor de atividade" />
+                    </ListItem >
+
+                    <ListItem button onClick={() => history.push('relatorio')}>
+                    <ListItemIcon>
+                        <Graphic />
+                    </ListItemIcon>
+                    <ListItemText disableTypography className={classes.SideBarFont} primary="Relatório" />
                     </ListItem >
                     </div>
                 ) : (

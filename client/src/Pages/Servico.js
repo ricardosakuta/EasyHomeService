@@ -141,7 +141,8 @@ export default function Servico() {
 
 		if (cards[id].status === 'new') {
 			formData.append("upload", cards[id].selectedFile);
-			formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
+			if (cards[id].selectedFile)
+				formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
 
 			ServicoAPI.add(formData)
 			.then(res => {
@@ -153,7 +154,8 @@ export default function Servico() {
 		} else {
 			if (cards[id].selectedFile) {
 				formData.append("upload", cards[id].selectedFile);
-				formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
+				if (cards[id].selectedFile)
+					formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
 			}
 
 			ServicoAPI.update(idEmpresa, cards[id].seq, formData)
