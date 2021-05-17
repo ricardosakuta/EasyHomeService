@@ -3,6 +3,10 @@ import * as CidadeAPI from '../API/CidadeAPI';
 import { makeStyles } from '@material-ui/core/styles';
 import CartaoCidade from '../Components/Cidade/CartaoCidade';
 import AdicionarCidade from '../Components/Cidade/AdicionarCidade';
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
+import { jsPDF } from "jspdf";
+import 'jspdf-autotable';
 
 const useStyles = makeStyles((theme) => ({
 	margin: {
@@ -19,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
 			right: '0px',
 		},
 	},
+	button: {
+		'& > *': {
+			margin: theme.spacing(3),
+			position: 'fixed',
+			bottom: '0px',
+			left: '0px',
+		},
+	}
 }));
 
 export default function Cidade() {
@@ -42,6 +54,27 @@ export default function Cidade() {
 		setUdate(true);
 	}
 
+	const handlePDF = (event) => {
+		event.preventDefault();
+
+		const doc = new jsPDF();
+		var col = [
+			"Código da cidade",
+			"Nome",
+			"UF",
+		];
+		console.log(cidades);
+		let docArray = [
+            ...cidades.map(e => [
+				e.id,
+				e.nome,
+				e.uf
+			])
+        ]
+		doc.autoTable(col, docArray, { startY: 10 });
+		doc.save("cidades.pdf");
+	}
+
 	return (
 		<div>
 			<h1>Cidade</h1>
@@ -54,6 +87,17 @@ export default function Cidade() {
 					parentCallback={handleUpdate} />)}
 			<div className={classes.root}>
 				<AdicionarCidade parentCallback={handleUpdate}/>
+			</div>
+			<div className={classes.button}>
+				<Button
+					variant="contained"
+					color="primary"
+					size="small"
+					startIcon={<SaveIcon />}
+					onClick={handlePDF}
+				>
+					Save
+ 	     		</Button>
 			</div>
 		</div>
 	)

@@ -21,6 +21,10 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
+import { jsPDF } from "jspdf";
+import 'jspdf-autotable';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,6 +55,14 @@ const useStyles = makeStyles((theme) => ({
     btn: {
         margin: theme.spacing(1),
     },
+    button: {
+        '& > *': {
+            margin: theme.spacing(3),
+            position: 'fixed',
+            bottom: '0px',
+            left: '0px',
+        },
+    }
 }));
 
 export default function Histórico() {
@@ -144,6 +156,36 @@ export default function Histórico() {
         newCards[id].comentarios = ([newComentario, ...newCards[id].comentarios]);
         setCards([...newCards]);
         setComentario('');
+    }
+
+    const handlePDF = (event) => {
+        event.preventDefault();
+
+        const doc = new jsPDF();
+        console.log(cards);
+
+        var col = [
+            "Serviço",
+            "Descricao",
+            "Imagem",
+            "Empresa",
+            "Telefone",
+            "Valor"
+        ];
+
+        let docArray = [
+            ...cards.map(e => [
+                e.nome,
+                e.descricao,
+                e.imagem_url,
+                e.nome_empresa,
+                e.telefone,
+                e.valor,
+            ])
+        ]
+        //console.log(col, docArray);
+        doc.autoTable(col, docArray, { startY: 10 });
+        doc.save("Historico.pdf");
     }
 
     return (
@@ -255,8 +297,17 @@ export default function Histórico() {
                     </Typography>
                 </Container>
             )}
-
-
+            <div className={classes.button}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    startIcon={<SaveIcon />}
+                    onClick={handlePDF}
+                >
+                    Save
+ 	     		</Button>
+            </div>
         </div>
     );
 }

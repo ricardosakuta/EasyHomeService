@@ -14,6 +14,9 @@ import Container from '@material-ui/core/Container';
 import * as usuarioAPI from '../API/UsuarioAPI';
 import Snackbars from '../Components/Alert';
 import AuthContext from '../Context/Auth';
+import SaveIcon from '@material-ui/icons/Save';
+import { jsPDF } from "jspdf";
+import 'jspdf-autotable';
 
 function Copyright() {
 	return (
@@ -51,6 +54,14 @@ const useStyles = makeStyles((theme) => ({
 			margin: theme.spacing(1),
 		},
 	},
+	button: {
+		'& > *': {
+			margin: theme.spacing(3),
+			position: 'fixed',
+			bottom: '0px',
+			left: '0px',
+		},
+	}
 }));
 
 export default function Cadastrar() {
@@ -63,15 +74,15 @@ export default function Cadastrar() {
 	const authContext = useContext(AuthContext);
 	const history = useHistory();
 
-    const [mensagem, setMensagem] = React.useState('');
-    const [tipo, setTipo] = React.useState(0);
-    const [alertID, setalertID] = React.useState(0);
+	const [mensagem, setMensagem] = React.useState('');
+	const [tipo, setTipo] = React.useState(0);
+	const [alertID, setalertID] = React.useState(0);
 
-    const callAlert = (t, m, i) => {
-        setTipo(t);
-        setMensagem(m);
-        setalertID(i);
-    }
+	const callAlert = (t, m, i) => {
+		setTipo(t);
+		setMensagem(m);
+		setalertID(i);
+	}
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -87,12 +98,12 @@ export default function Cadastrar() {
 			authContext.setNome(res.nome);
 			authContext.setIdCliente(res.id);
 			authContext.setPerfil(res.perfil);
-            callAlert(0, res.message, alertID + 1);
+			callAlert(0, res.message, alertID + 1);
 			history.push('/')
-        }).catch(error => {
+		}).catch(error => {
 			console.log(error);
-            callAlert(1, 'Erro ao cadastrar cliente.', alertID + 1);
-        });
+			callAlert(1, 'Erro ao cadastrar cliente.', alertID + 1);
+		});
 	}
 
 	const handleChangeEmail = (event) => {
@@ -119,6 +130,31 @@ export default function Cadastrar() {
 	const handleChangeTelefone = (event) => {
 		const target = event.target;
 		setTelefone(target.value);
+	}
+
+	const handlePDF = (event) => {
+		event.preventDefault();
+
+		const doc = new jsPDF();
+		var col = [
+
+			"E-mail",
+			"Primeiro Nome",
+			"Sobrenome",
+			"Telefone",
+		];
+
+		let docArray = [
+			[
+				email,
+				primeiroNome,
+				sobrenome,
+				telefone,
+			]
+		]
+		//console.log(col, docArray);
+		doc.autoTable(col, docArray, { startY: 10 });
+		doc.save("Cadastro.pdf");
 	}
 
 	return (
@@ -212,6 +248,17 @@ export default function Cadastrar() {
 				<Copyright />
 			</Box>
 			<Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />
+			<div className={classes.button}>
+				<Button
+					variant="contained"
+					color="primary"
+					size="small"
+					startIcon={<SaveIcon />}
+					onClick={handlePDF}
+				>
+					Save
+ 	     		</Button>
+			</div>
 		</Container>
 	);
 }

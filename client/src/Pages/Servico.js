@@ -15,6 +15,9 @@ import Empresa from '../Components/Servico/Empresa'
 import TextField from '@material-ui/core/TextField';
 import * as ServicoAPI from '../API/ServicoAPI';
 import Snackbars from '../Components/Alert';
+import SaveIcon from '@material-ui/icons/Save';
+import { jsPDF } from "jspdf";
+import 'jspdf-autotable';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -60,6 +63,14 @@ const useStyles = makeStyles((theme) => ({
 		flexDirection: 'column',
 		alignItems: 'center',
 	},
+	button: {
+		'& > *': {
+			margin: theme.spacing(3),
+			position: 'fixed',
+			bottom: '0px',
+			left: '0px',
+		},
+	}
 }));
 
 export default function Servico() {
@@ -145,12 +156,12 @@ export default function Servico() {
 				formData.append("extensao", cards[id].selectedFile.name.split('.').pop());
 
 			ServicoAPI.add(formData)
-			.then(res => {
-				callAlert(0, res.message, alertID + 1);
-			}).catch(error => {
-				console.log(error);
-				callAlert(1, error.response.message, alertID + 1);
-			});
+				.then(res => {
+					callAlert(0, res.message, alertID + 1);
+				}).catch(error => {
+					console.log(error);
+					callAlert(1, error.response.message, alertID + 1);
+				});
 		} else {
 			if (cards[id].selectedFile) {
 				formData.append("upload", cards[id].selectedFile);
@@ -159,12 +170,12 @@ export default function Servico() {
 			}
 
 			ServicoAPI.update(idEmpresa, cards[id].seq, formData)
-			.then(res => {
-				callAlert(0, res.message, alertID + 1);
-			}).catch(error => {
-				console.log(error);
-				callAlert(1, error.response.message, alertID + 1);
-			});
+				.then(res => {
+					callAlert(0, res.message, alertID + 1);
+				}).catch(error => {
+					console.log(error);
+					callAlert(1, error.response.message, alertID + 1);
+				});
 		}
 	};
 
@@ -225,6 +236,31 @@ export default function Servico() {
 				console.log(error);
 				callAlert(1, error.response.message, alertID + 1);
 			});
+	}
+
+	const handlePDF = (event) => {
+		event.preventDefault();
+
+		const doc = new jsPDF();
+		var col = [
+			"Sequencial",
+			"Nome",
+			"Descricao",
+			"Imagem",
+			"Valor",
+		];
+		let docArray = [
+			...cards.map(e => [
+				e.seq,
+				e.nome,
+				e.descricao,
+				e.imagem_url,
+				e.valor,
+			])
+		]
+		//console.log(col, docArray);
+		doc.autoTable(col, docArray, { startY: 10 });
+		doc.save("serviços.pdf");
 	}
 
 	return (
@@ -326,6 +362,17 @@ export default function Servico() {
 				</Fab>
 			</Tooltip>
 			<Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />
+			<div className={classes.button}>
+				<Button
+					variant="contained"
+					color="primary"
+					size="small"
+					startIcon={<SaveIcon />}
+					onClick={handlePDF}
+				>
+					Save
+ 	     		</Button>
+			</div>
 		</div>
 	);
 }
