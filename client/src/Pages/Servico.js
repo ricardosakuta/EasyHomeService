@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CardActions from '@material-ui/core/CardActions';
@@ -13,6 +13,7 @@ import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
 import Empresa from '../Components/Servico/Empresa'
 import TextField from '@material-ui/core/TextField';
+import AuthContext from '../Context/Auth';
 import * as ServicoAPI from '../API/ServicoAPI';
 import Snackbars from '../Components/Alert';
 import SaveIcon from '@material-ui/icons/Save';
@@ -81,6 +82,7 @@ export default function Servico() {
 	const [mensagem, setMensagem] = React.useState('');
 	const [tipo, setTipo] = React.useState(0);
 	const [alertID, setalertID] = React.useState(0);
+	const authContext = useContext(AuthContext);
 
 	const callAlert = (t, m, i) => {
 		setTipo(t);
@@ -265,114 +267,126 @@ export default function Servico() {
 
 	return (
 		<div>
-			<div className={classes.heroContent}>
-				<Empresa parentCallback={updateValues} />
-				<Container className={classes.cardGrid} maxWidth="md">
-					{cards.length > 0 ? (
-						<Typography component="h1" variant="h5" className={classes.paper}>
-							Serviços
-						</Typography>
-					) : (
-						<Typography component="h1" variant="h5" className={classes.paper}>
-							Nenhum serviço cadastrado!
-						</Typography>
-					)}
-					<Grid container spacing={4}>
-						{cards.map((card, index) => (
-							<Grid item key={card.id} xs={12} sm={6} md={4}>
-								<Card className={classes.card}>
-									<div>
-										<CardMedia
-											className={classes.cardMedia}
-											image={card.selectedFileURL ? card.selectedFileURL : card.imagem_url}
-											title={card.nome}
-											id={index} />
+			{
+				authContext.perfil !== 2 ? (
+					<div>
+						<Typography component="h1" variant="h5">
+							Acesso negado.
+        		        </Typography>
+					</div>
+				) : (
+					<div>
+						<div className={classes.heroContent}>
+							<Empresa parentCallback={updateValues} />
+							<Container className={classes.cardGrid} maxWidth="md">
+								{cards.length > 0 ? (
+									<Typography component="h1" variant="h5" className={classes.paper}>
+										Serviços
+									</Typography>
+								) : (
+									<Typography component="h1" variant="h5" className={classes.paper}>
+										Nenhum serviço cadastrado!
+									</Typography>
+								)}
+								<Grid container spacing={4}>
+									{cards.map((card, index) => (
+										<Grid item key={card.id} xs={12} sm={6} md={4}>
+											<Card className={classes.card}>
+												<div>
+													<CardMedia
+														className={classes.cardMedia}
+														image={card.selectedFileURL ? card.selectedFileURL : card.imagem_url}
+														title={card.nome}
+														id={index} />
 
-										<input
-											type="file"
-											id={"Input" + index}
-											onChange={handleFileChange}
-											accept=".jpeg, .jpg"
-										/>
-									</div>
+													<input
+														type="file"
+														id={"Input" + index}
+														onChange={handleFileChange}
+														accept=".jpeg, .jpg"
+													/>
+												</div>
 
-									<CardContent className={classes.cardContent}>
-										<Grid container spacing={2}>
-											<Grid item xs={12}>
-												<TextField
-													variant="outlined"
-													fullWidth
-													name="Nome"
-													label="Nome"
-													type="Nome"
-													id={"Nome" + index}
-													defaultValue={card.nome}
-													autoComplete="Nome"
-													onChange={handleChangeNome}
-												/>
-											</Grid>
-											<Grid item xs={12}>
-												<TextField
-													variant="outlined"
-													fullWidth
-													name="Descricao"
-													label="Descrição"
-													type="Descricao"
-													id={"Descricao" + index}
-													autoComplete="Descricao"
-													defaultValue={card.descricao}
-													multiline
-													rows={4}
-													onChange={handleChangeDescricao}
-												/>
-											</Grid>
-											<Grid item xs={12}>
-												<TextField
-													variant="outlined"
-													fullWidth
-													name="Valor"
-													label="Valor"
-													type="Valor"
-													id={"Valor" + index}
-													autoComplete="Valor"
-													defaultValue={card.valor}
-													onChange={handleChangeValor}
-												/>
-											</Grid>
+												<CardContent className={classes.cardContent}>
+													<Grid container spacing={2}>
+														<Grid item xs={12}>
+															<TextField
+																variant="outlined"
+																fullWidth
+																name="Nome"
+																label="Nome"
+																type="Nome"
+																id={"Nome" + index}
+																defaultValue={card.nome}
+																autoComplete="Nome"
+																onChange={handleChangeNome}
+															/>
+														</Grid>
+														<Grid item xs={12}>
+															<TextField
+																variant="outlined"
+																fullWidth
+																name="Descricao"
+																label="Descrição"
+																type="Descricao"
+																id={"Descricao" + index}
+																autoComplete="Descricao"
+																defaultValue={card.descricao}
+																multiline
+																rows={4}
+																onChange={handleChangeDescricao}
+															/>
+														</Grid>
+														<Grid item xs={12}>
+															<TextField
+																variant="outlined"
+																fullWidth
+																name="Valor"
+																label="Valor"
+																type="Valor"
+																id={"Valor" + index}
+																autoComplete="Valor"
+																defaultValue={card.valor}
+																onChange={handleChangeValor}
+															/>
+														</Grid>
+													</Grid>
+												</CardContent>
+												<CardActions>
+													<Button size="small" color="primary" id={index} onClick={handleFileUpload}>
+														Salvar
+                    								</Button>
+													<Button size="small" color="secondary" id={index} onClick={deleteCard}>
+														Apagar
+                    								</Button>
+												</CardActions>
+											</Card>
 										</Grid>
-									</CardContent>
-									<CardActions>
-										<Button size="small" color="primary" id={index} onClick={handleFileUpload}>
-											Salvar
-                    					</Button>
-										<Button size="small" color="secondary" id={index} onClick={deleteCard}>
-											Apagar
-                    					</Button>
-									</CardActions>
-								</Card>
-							</Grid>
-						))}
-					</Grid>
-				</Container>
-			</div>
+									))}
+								</Grid>
+							</Container>
+						</div>
 
-			<Tooltip title="Adicionar serviço" aria-label="add" onClick={handleAddServico}>
-				<Fab color="secondary" className={classes.absolute}>
-					<AddIcon />
-				</Fab>
-			</Tooltip>
-			<Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />
-			<div className={classes.button}>
-				<Button
-					variant="contained"
-					color="primary"
-					size="small"
-					startIcon={<SaveIcon />}
-					onClick={handlePDF}
-				>
-					Save
- 	     		</Button>
-			</div>
+						<Tooltip title="Adicionar serviço" aria-label="add" onClick={handleAddServico}>
+							<Fab color="secondary" className={classes.absolute}>
+								<AddIcon />
+							</Fab>
+						</Tooltip>
+						<Snackbars mensagem={mensagem} tipo={tipo} id={alertID} />
+						<div className={classes.button}>
+							<Button
+								variant="contained"
+								color="primary"
+								size="small"
+								startIcon={<SaveIcon />}
+								onClick={handlePDF}
+							>
+								Save
+ 	     					</Button>
+						</div>
+					</div>
+				)
+			}
 		</div>
 	);
 }

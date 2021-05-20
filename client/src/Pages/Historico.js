@@ -26,8 +26,6 @@ import SaveIcon from '@material-ui/icons/Save';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 
-
-
 const useStyles = makeStyles((theme) => ({
     root: {
         margin: theme.spacing(1),
@@ -190,136 +188,148 @@ export default function Histórico() {
     }
 
     return (
-        <div className={classes.center}>
-            {cards && cards.length > 0 ? (
-                cards.map((card, index) => (
-                    <Grid item xs={12} sm={12}>
-                    <Card className={classes.root} key={card.empresa_id + card.seq}>
+        <div>
+            {
+                authContext.perfil !== 2 ? (
+                    <div>
+                        <Typography component="h1" variant="h5">
+                            Acesso negado.
+        		        </Typography>
+                    </div>
+                ) : (
+                    <div className={classes.center}>
+                        {cards && cards.length > 0 ? (
+                            cards.map((card, index) => (
+                                <Grid item xs={12} sm={12}>
+                                    <Card className={classes.root} key={card.empresa_id + card.seq}>
 
-                        <CardHeader
-                            avatar={
-                                <Avatar aria-label="recipe" className={classes.avatar}>
-                                    {card.nome_empresa.charAt(0)}
-                                </Avatar>
-                            }
-                            title={card.nome_empresa + ' - ' + card.nome}
-                            subheader={"Contato: " + card.telefone}
-                        />
-                        <CardMedia
-                            className={classes.media}
-                            image={card.imagem_url}
-                            title="Paella dish"
-                        />
-                        <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                {cidades.find(e => e.id === card.cidade_id) ? (
-                                    cidades.find(e => e.id === card.cidade_id).nome
-                                ) : (
-                                    console.log(cidades)
-                                )}
-                            </Typography>
-                        </CardContent>
-                        <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                {card.descricao}
-                            </Typography>
-                        </CardContent>
-                        <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                {'R$' + card.valor}
-                            </Typography>
-                        </CardContent>
-                        <CardActions disableSpacing>
-                            <IconButton
-                                aria-label="Curtir"
-                                id={index}
-                                onClick={handleCurtir}>
+                                        <CardHeader
+                                            avatar={
+                                                <Avatar aria-label="recipe" className={classes.avatar}>
+                                                    {card.nome_empresa.charAt(0)}
+                                                </Avatar>
+                                            }
+                                            title={card.nome_empresa + ' - ' + card.nome}
+                                            subheader={"Contato: " + card.telefone}
+                                        />
+                                        <CardMedia
+                                            className={classes.media}
+                                            image={card.imagem_url}
+                                            title="Paella dish"
+                                        />
+                                        <CardContent>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                {cidades.find(e => e.id === card.cidade_id) ? (
+                                                    cidades.find(e => e.id === card.cidade_id).nome
+                                                ) : (
+                                                    console.log(cidades)
+                                                )}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardContent>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                {card.descricao}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardContent>
+                                            <Typography variant="body2" color="textSecondary" component="p">
+                                                {'R$' + card.valor}
+                                            </Typography>
+                                        </CardContent>
+                                        <CardActions disableSpacing>
+                                            <IconButton
+                                                aria-label="Curtir"
+                                                id={index}
+                                                onClick={handleCurtir}>
 
-                                {card.curtiu > 0 ? (
-                                    <FavoriteRoundedIcon color="secondary" />
-                                ) : (
-                                    <FavoriteIcon />
-                                )}
-                            </IconButton>
-                            <IconButton
-                                className={clsx(classes.expand, {
-                                    [classes.expandOpen]: expanded && cardIndex === index,
-                                })}
-                                onClick={handleExpandClick}
-                                id={index}
-                                aria-expanded={expanded && cardIndex === index}
-                                aria-label="show more"
-                            >
-                                <ExpandMoreIcon />
-                            </IconButton>
-                        </CardActions>
-                        <Collapse in={expanded && cardIndex === index} timeout="auto" unmountOnExit>
-                            <CardContent>
-                                {
-                                    authContext.idCliente > 0 ? (
-                                        <div>
-                                            <TextField
-                                                variant="outlined"
-                                                fullWidth
-                                                name="Comentar"
-                                                label="Comentar"
-                                                type="Comentar"
-                                                id="Comentar"
-                                                autoComplete="Comentar"
-                                                value={comentario}
-                                                multiline
-                                                rows={3}
-                                                onChange={handleChangeComentario}
-                                            />
-                                            <Button size="small" className={classes.btn} id={index} onClick={handleEnviarComentario}>
-                                                Enviar
-                                </Button>
-                                        </div>
-                                    ) : (
-                                        console.log('O cliente ainda não logou!')
-                                    )
-                                }
-
-                                {
-                                    card.comentarios && card.comentarios.length > 0 ? (
-                                        card.comentarios.map((e) => (
-                                            <CardHeader
-                                                avatar={
-                                                    <Avatar aria-label="recipe" className={classes.avatar}>
-                                                        {e.nome_cliente.charAt(0)}
-                                                    </Avatar>
+                                                {card.curtiu > 0 ? (
+                                                    <FavoriteRoundedIcon color="secondary" />
+                                                ) : (
+                                                    <FavoriteIcon />
+                                                )}
+                                            </IconButton>
+                                            <IconButton
+                                                className={clsx(classes.expand, {
+                                                    [classes.expandOpen]: expanded && cardIndex === index,
+                                                })}
+                                                onClick={handleExpandClick}
+                                                id={index}
+                                                aria-expanded={expanded && cardIndex === index}
+                                                aria-label="show more"
+                                            >
+                                                <ExpandMoreIcon />
+                                            </IconButton>
+                                        </CardActions>
+                                        <Collapse in={expanded && cardIndex === index} timeout="auto" unmountOnExit>
+                                            <CardContent>
+                                                {
+                                                    authContext.idCliente > 0 ? (
+                                                        <div>
+                                                            <TextField
+                                                                variant="outlined"
+                                                                fullWidth
+                                                                name="Comentar"
+                                                                label="Comentar"
+                                                                type="Comentar"
+                                                                id="Comentar"
+                                                                autoComplete="Comentar"
+                                                                value={comentario}
+                                                                multiline
+                                                                rows={3}
+                                                                onChange={handleChangeComentario}
+                                                            />
+                                                            <Button size="small" className={classes.btn} id={index} onClick={handleEnviarComentario}>
+                                                                Enviar
+                                                            </Button>
+                                                        </div>
+                                                    ) : (
+                                                        console.log('O cliente ainda não logou!')
+                                                    )
                                                 }
-                                                title={e.nome_cliente}
-                                                subheader={e.texto}
-                                            />
-                                        ))
-                                    ) : (
-                                        <Typography paragraph>Nenhum comentário foi feito.</Typography>
-                                    )
-                                }
-                            </CardContent>
-                        </Collapse>
-                    </Card>
-                    </Grid>
-                ))
-            ) : (
-                <Container className={classes.cardGrid} maxWidth="md">
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        Não foi encontrado nenhum histórico de curtidas!
-                    </Typography>
-                </Container>
-            )}
-            <div className={classes.button}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    startIcon={<SaveIcon />}
-                    onClick={handlePDF}
-                >
-                    Save
- 	     		</Button>
-            </div>
+
+                                                {
+                                                    card.comentarios && card.comentarios.length > 0 ? (
+                                                        card.comentarios.map((e) => (
+                                                            <CardHeader
+                                                                avatar={
+                                                                    <Avatar aria-label="recipe" className={classes.avatar}>
+                                                                        {e.nome_cliente.charAt(0)}
+                                                                    </Avatar>
+                                                                }
+                                                                title={e.nome_cliente}
+                                                                subheader={e.texto}
+                                                            />
+                                                        ))
+                                                    ) : (
+                                                        <Typography paragraph>Nenhum comentário foi feito.</Typography>
+                                                    )
+                                                }
+                                            </CardContent>
+                                        </Collapse>
+                                    </Card>
+                                </Grid>
+                            ))
+                        ) : (
+                            <Container className={classes.cardGrid} maxWidth="md">
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    Não foi encontrado nenhum histórico de curtidas!
+                                </Typography>
+                            </Container>
+                        )}
+                        <div className={classes.button}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="small"
+                                startIcon={<SaveIcon />}
+                                onClick={handlePDF}
+                            >
+                                Save
+ 	     	            	</Button>
+                        </div>
+                    </div>
+                )
+            }
         </div>
     );
 }
