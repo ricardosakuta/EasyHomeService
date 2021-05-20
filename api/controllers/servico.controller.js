@@ -31,7 +31,7 @@ exports.post = async (req, res) => {
     const { empresa_id, seq, nome, descricao, valor, extensao } = req.body
     let messageError = '';
 
-    if (nome === "" || !descricao === "")
+    if (nome === "" || !descricao === "" || isNaN(valor))
         res.status(422).json({ message: "Dados incorretos!" });
 
     if (!file) {
@@ -221,9 +221,9 @@ exports.getByTexto = async (req, res) => {
 		) as curtiu
 		from servico s
         join empresa e on (e.id = s.empresa_id)
-        where e.nome LIKE $2
-           or s.nome LIKE $2
-           or s.descricao LIKE $2
+        where LOWER(e.nome) LIKE LOWER($2)
+           or LOWER(s.nome) LIKE LOWER($2)
+           or LOWER(s.descricao) LIKE LOWER($2)
         order by s.seq`,
         [req.params.id_cliente, text],
         (error, results) => {
