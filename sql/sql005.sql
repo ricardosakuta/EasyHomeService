@@ -29,3 +29,4 @@ CREATE TABLE comentario (
 ALTER TABLE empresa ADD COLUMN telefone varchar;
 ALTER TABLE cliente ADD COLUMN data_criacao date;
 ALTER TABLE servico ADD COLUMN data_criacao date;
+ALTER TABLE cliente ADD telefone varchar;

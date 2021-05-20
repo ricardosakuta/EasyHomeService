@@ -173,7 +173,7 @@ export default function Acessar() {
           			</Button>
 					<Grid container>
 						<Grid item>
-							<Link href="/cadastrar" variant="body2">
+							<Link href="/#/cadastrar" variant="body2">
 								{"Não tem conta? Crie uma aqui."}
 							</Link>
 						</Grid>
