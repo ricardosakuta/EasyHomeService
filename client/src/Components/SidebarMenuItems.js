@@ -91,7 +91,7 @@ export default function SidebarMenuItems() {
                     <ListItemIcon>
                         <AccountBox />
                     </ListItemIcon>
-                    <ListItemText disableTypography className={classes.SideBarFont} primary="Funcionário" />
+                    <ListItemText disableTypography className={classes.SideBarFont} primary="Perfil" />
                     </ListItem >
                     </div>
                 ) : (

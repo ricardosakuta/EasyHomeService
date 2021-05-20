@@ -200,7 +200,7 @@ export default function Cadastrar() {
 								required
 								fullWidth
 								id="email"
-								label="Email"
+								label="E-mail"
 								name="email"
 								autoComplete="email"
 								onChange={handleChangeEmail}

@@ -21,9 +21,11 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import SaveIcon from '@material-ui/icons/Save';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -70,7 +72,7 @@ export default function Histórico() {
     const [cards, setCards] = useState([]);
     const [cidades, setCidades] = React.useState([]);
     const authContext = useContext(AuthContext);
-    const [expanded, setExpanded] = React.useState(false);
+    const [expanded, setExpanded] = React.useState([false]);
     const [comentario, setComentario] = React.useState("");
 
     async function getServicosByCurtida(clienteId) {
@@ -192,6 +194,7 @@ export default function Histórico() {
         <div className={classes.center}>
             {cards && cards.length > 0 ? (
                 cards.map((card, index) => (
+                    <Grid item xs={12} sm={12}>
                     <Card className={classes.root} key={card.empresa_id + card.seq}>
 
                         <CardHeader
@@ -200,7 +203,7 @@ export default function Histórico() {
                                     {card.nome_empresa.charAt(0)}
                                 </Avatar>
                             }
-                            title={card.nome_empresa + ' ' + card.nome}
+                            title={card.nome_empresa + ' - ' + card.nome}
                             subheader={"Contato: " + card.telefone}
                         />
                         <CardMedia
@@ -253,22 +256,31 @@ export default function Histórico() {
                         </CardActions>
                         <Collapse in={expanded} timeout="auto" unmountOnExit>
                             <CardContent>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    name="Comentar"
-                                    label="Comentar"
-                                    type="Comentar"
-                                    id="Comentar"
-                                    autoComplete="Comentar"
-                                    value={comentario}
-                                    multiline
-                                    rows={3}
-                                    onChange={handleChangeComentario}
-                                />
-                                <Button size="small" className={classes.btn} id={index} onClick={handleEnviarComentario}>
-                                    Enviar
+                                {
+                                    authContext.idCliente > 0 ? (
+                                        <div>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                name="Comentar"
+                                                label="Comentar"
+                                                type="Comentar"
+                                                id="Comentar"
+                                                autoComplete="Comentar"
+                                                value={comentario}
+                                                multiline
+                                                rows={3}
+                                                onChange={handleChangeComentario}
+                                            />
+                                            <Button size="small" className={classes.btn} id={index} onClick={handleEnviarComentario}>
+                                                Enviar
                                 </Button>
+                                        </div>
+                                    ) : (
+                                        console.log('O cliente ainda não logou!')
+                                    )
+                                }
+
                                 {
                                     card.comentarios && card.comentarios.length > 0 ? (
                                         card.comentarios.map((e) => (
@@ -289,6 +301,7 @@ export default function Histórico() {
                             </CardContent>
                         </Collapse>
                     </Card>
+                    </Grid>
                 ))
             ) : (
                 <Container className={classes.cardGrid} maxWidth="md">
