@@ -81,7 +81,7 @@ export default function AdicionarCidade(props) {
 
     return (
         <div>
-			<Tooltip title="Adicionar serviço" aria-label="Adicionar setor" onClick={handleClickOpen}>
+			<Tooltip title="Adicionar setor" aria-label="Adicionar setor" onClick={handleClickOpen}>
 				<Fab color="secondary">
 					<AddIcon />
 				</Fab>
@@ -110,7 +110,7 @@ export default function AdicionarCidade(props) {
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                    <Button onClick={handleClose} color="primary">Cancelar</Button>
                     <Button onClick={handleSubmit} color="primary">Adicionar</Button>
                 </DialogActions>
             </Dialog>

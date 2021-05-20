@@ -21,6 +21,12 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import SaveIcon from '@material-ui/icons/Save';
+import { jsPDF } from "jspdf";
+import 'jspdf-autotable';
+
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,6 +57,14 @@ const useStyles = makeStyles((theme) => ({
     btn: {
         margin: theme.spacing(1),
     },
+    button: {
+        '& > *': {
+            margin: theme.spacing(3),
+            position: 'fixed',
+            bottom: '0px',
+            left: '0px',
+        },
+    }
 }));
 
 export default function Histórico() {
@@ -58,7 +72,8 @@ export default function Histórico() {
     const [cards, setCards] = useState([]);
     const [cidades, setCidades] = React.useState([]);
     const authContext = useContext(AuthContext);
-    const [expanded, setExpanded] = React.useState(false);
+    const [expanded, setExpanded] = React.useState([false]);
+    const [cardIndex, setCardIndex] = React.useState([0]);
     const [comentario, setComentario] = React.useState("");
 
     async function getServicosByCurtida(clienteId) {
@@ -87,12 +102,10 @@ export default function Histórico() {
     }, [])
 
     const handleExpandClick = (event) => {
-        setExpanded(!expanded);
-
-        if (expanded)
-            return;
+        setExpanded(true);
 
         let id = event.currentTarget.id
+        setCardIndex(parseInt(id));
         getComentarios(id);
     };
 
@@ -146,10 +159,41 @@ export default function Histórico() {
         setComentario('');
     }
 
+    const handlePDF = (event) => {
+        event.preventDefault();
+
+        const doc = new jsPDF();
+        console.log(cards);
+
+        var col = [
+            "Serviço",
+            "Descricao",
+            "Imagem",
+            "Empresa",
+            "Telefone",
+            "Valor"
+        ];
+
+        let docArray = [
+            ...cards.map(e => [
+                e.nome,
+                e.descricao,
+                e.imagem_url,
+                e.nome_empresa,
+                e.telefone,
+                e.valor,
+            ])
+        ]
+        //console.log(col, docArray);
+        doc.autoTable(col, docArray, { startY: 10 });
+        doc.save("Historico.pdf");
+    }
+
     return (
         <div className={classes.center}>
             {cards && cards.length > 0 ? (
                 cards.map((card, index) => (
+                    <Grid item xs={12} sm={12}>
                     <Card className={classes.root} key={card.empresa_id + card.seq}>
 
                         <CardHeader
@@ -158,7 +202,7 @@ export default function Histórico() {
                                     {card.nome_empresa.charAt(0)}
                                 </Avatar>
                             }
-                            title={card.nome_empresa + ' ' + card.nome}
+                            title={card.nome_empresa + ' - ' + card.nome}
                             subheader={"Contato: " + card.telefone}
                         />
                         <CardMedia
@@ -199,34 +243,43 @@ export default function Histórico() {
                             </IconButton>
                             <IconButton
                                 className={clsx(classes.expand, {
-                                    [classes.expandOpen]: expanded,
+                                    [classes.expandOpen]: expanded && cardIndex === index,
                                 })}
                                 onClick={handleExpandClick}
                                 id={index}
-                                aria-expanded={expanded}
+                                aria-expanded={expanded && cardIndex === index}
                                 aria-label="show more"
                             >
                                 <ExpandMoreIcon />
                             </IconButton>
                         </CardActions>
-                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        <Collapse in={expanded && cardIndex === index} timeout="auto" unmountOnExit>
                             <CardContent>
-                                <TextField
-                                    variant="outlined"
-                                    fullWidth
-                                    name="Comentar"
-                                    label="Comentar"
-                                    type="Comentar"
-                                    id="Comentar"
-                                    autoComplete="Comentar"
-                                    value={comentario}
-                                    multiline
-                                    rows={3}
-                                    onChange={handleChangeComentario}
-                                />
-                                <Button size="small" className={classes.btn} id={index} onClick={handleEnviarComentario}>
-                                    Enviar
+                                {
+                                    authContext.idCliente > 0 ? (
+                                        <div>
+                                            <TextField
+                                                variant="outlined"
+                                                fullWidth
+                                                name="Comentar"
+                                                label="Comentar"
+                                                type="Comentar"
+                                                id="Comentar"
+                                                autoComplete="Comentar"
+                                                value={comentario}
+                                                multiline
+                                                rows={3}
+                                                onChange={handleChangeComentario}
+                                            />
+                                            <Button size="small" className={classes.btn} id={index} onClick={handleEnviarComentario}>
+                                                Enviar
                                 </Button>
+                                        </div>
+                                    ) : (
+                                        console.log('O cliente ainda não logou!')
+                                    )
+                                }
+
                                 {
                                     card.comentarios && card.comentarios.length > 0 ? (
                                         card.comentarios.map((e) => (
@@ -247,6 +300,7 @@ export default function Histórico() {
                             </CardContent>
                         </Collapse>
                     </Card>
+                    </Grid>
                 ))
             ) : (
                 <Container className={classes.cardGrid} maxWidth="md">
@@ -255,8 +309,17 @@ export default function Histórico() {
                     </Typography>
                 </Container>
             )}
-
-
+            <div className={classes.button}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    startIcon={<SaveIcon />}
+                    onClick={handlePDF}
+                >
+                    Save
+ 	     		</Button>
+            </div>
         </div>
     );
 }

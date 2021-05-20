@@ -110,7 +110,7 @@ export default function EditarSetor(props) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleDelete} color="secondary">Apagar</Button>
-                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                    <Button onClick={handleClose} color="primary">Cancelar</Button>
                     <Button onClick={handleUpdate} color="primary">Atualizar</Button>
                 </DialogActions>
             </Dialog>

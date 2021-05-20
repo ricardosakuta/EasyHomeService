@@ -149,7 +149,7 @@ export default function Perfil(props) {
                                     className={classes.submit}
                                     onClick={handleSubmit}
                                 >
-                                    Atualizer perfil
+                                    Atualizar perfil
                                 </Button>
                             </Grid>
                         </Grid>

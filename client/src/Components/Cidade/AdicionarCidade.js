@@ -81,7 +81,7 @@ export default function AdicionarCidade(props) {
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                    <Button onClick={handleClose} color="primary">Cancelar</Button>
                     <Button onClick={handleSubmit} color="primary">Adicionar</Button>
                 </DialogActions>
             </Dialog>

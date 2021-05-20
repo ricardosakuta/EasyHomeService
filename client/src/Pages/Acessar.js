@@ -143,7 +143,7 @@ export default function Acessar() {
 						required
 						fullWidth
 						id="email"
-						label="Email"
+						label="E-mail"
 						name="email"
 						autoComplete="email"
 						autoFocus
@@ -172,11 +172,6 @@ export default function Acessar() {
 						Entrar
           			</Button>
 					<Grid container>
-						<Grid item xs>
-							<Link href="#" variant="body2">
-								Esqueceu a senha?
-              				</Link>
-						</Grid>
 						<Grid item>
 							<Link href="/cadastrar" variant="body2">
 								{"Não tem conta? Crie uma aqui."}
