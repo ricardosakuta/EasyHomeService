@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Chart } from "react-google-charts";
 import { makeStyles } from '@material-ui/core/styles';
 import * as relatorioAPI from '../API/RelatorioAPI';
+import AuthContext from '../Context/Auth';
+import Typography from '@material-ui/core/Typography';
 
 const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
 
@@ -21,6 +23,7 @@ function Relatorio() {
     const classes = useStyles();
     const [optionsNovosClientes, setOptionsNovosClientes] = useState({})
     const [dataNovosClientes, setDataNovosClientes] = useState([])
+    const authContext = useContext(AuthContext);
 
     async function getRelatorioNovosClientes() {
         setOptionsNovosClientes({
@@ -118,69 +121,81 @@ function Relatorio() {
     }, []);
 
     return (
-        <div className={classes.root}>
-            <div className={classes.center}>
-                <Chart
-                    width={'500px'}
-                    height={'300px'}
-                    chartType="PieChart"
-                    id='Novos clientes (Últimos meses)'
-                    data={dataNovosClientes}
-                    options={optionsNovosClientes}
-                />
-            </div>
+        <div>
+            {
+                authContext.perfil !== 1 ? (
+                    <div>
+                        <Typography component="h1" variant="h5">
+                            Acesso negado.
+        		        </Typography>
+                    </div>
+                ) : (
+                    <div className={classes.root}>
+                        <div className={classes.center}>
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="PieChart"
+                                id='Novos clientes (Últimos meses)'
+                                data={dataNovosClientes}
+                                options={optionsNovosClientes}
+                            />
+                        </div>
 
-            <br />
+                        <br />
 
-            <div className={classes.center}>
-                <Chart
-                    width={'500px'}
-                    height={'300px'}
-                    chartType="PieChart"
-                    id='Novos serviços'
-                    data={dataNovosServicos}
-                    options={optionsNovosServicos}
-                />
-            </div>
+                        <div className={classes.center}>
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="PieChart"
+                                id='Novos serviços'
+                                data={dataNovosServicos}
+                                options={optionsNovosServicos}
+                            />
+                        </div>
 
-            <br />
+                        <br />
 
-            <div className={classes.center}>
-                <Chart
-                    width={'500px'}
-                    height={'300px'}
-                    chartType="PieChart"
-                    id='Empresas / cidade'
-                    data={dataEmpresaCidade}
-                    options={optionsEmpresaCidade}
-                />
-            </div>
+                        <div className={classes.center}>
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="PieChart"
+                                id='Empresas / cidade'
+                                data={dataEmpresaCidade}
+                                options={optionsEmpresaCidade}
+                            />
+                        </div>
 
-            <br />
+                        <br />
 
-            <div className={classes.center}>
-                <Chart
-                    width={'500px'}
-                    height={'300px'}
-                    chartType="PieChart"
-                    id='Serviços / cidade'
-                    data={dataServicosCidade}
-                    options={optionsServicosCidade}
-                />
-            </div>
+                        <div className={classes.center}>
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="PieChart"
+                                id='Serviços / cidade'
+                                data={dataServicosCidade}
+                                options={optionsServicosCidade}
+                            />
+                        </div>
 
-            <br />
+                        <br />
 
-            <div className={classes.center}>
-                <Chart
-                    width={'500px'}
-                    height={'300px'}
-                    chartType="PieChart"
-                    id='Serviços / Setor'
-                    data={dataServicosSetor}
-                    options={optionsServicosSetor}
-                />
-            </div>
+                        <div className={classes.center}>
+                            <Chart
+                                width={'500px'}
+                                height={'300px'}
+                                chartType="PieChart"
+                                id='Serviços / Setor'
+                                data={dataServicosSetor}
+                                options={optionsServicosSetor}
+                            />
+                        </div>
+                    </div>
+                )
+            }
         </div>
     );
 }

@@ -45,8 +45,11 @@ export default function Funcionario() {
 		event.preventDefault();
 		UsuarioAPI.getByEmail(email)
 			.then(res => {
-				//setNome(res.nome);
-				history.push('perfil', { res })
+				console.log("res: " + res)
+				history.push({
+					pathname: '/perfil',
+					state: { res }
+				  })
 			})
 	}
 

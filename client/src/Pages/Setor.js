@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import * as SetorAPI from '../API/SetorAPI';
 import { makeStyles } from '@material-ui/core/styles';
 import CartaoSetor from '../Components/Setor/CartaoSetor';
@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
+import Typography from '@material-ui/core/Typography';
+import AuthContext from '../Context/Auth';
 
 const useStyles = makeStyles((theme) => ({
 	margin: {
@@ -37,6 +39,7 @@ export default function Setor() {
 	const classes = useStyles();
 	const [setores, setSetores] = useState([]);
 	const [update, setUdate] = useState(true);
+	const authContext = useContext(AuthContext);
 
 	useEffect(() => {
 		async function getCidades() {
@@ -79,30 +82,42 @@ export default function Setor() {
 
 	return (
 		<div>
-			<h1>Setor de atividade</h1>
-			{setores.map(setor =>
-				<CartaoSetor
-					key={setor.id}
-					id={setor.id}
-					descricao={setor.descricao}
-					cidade_id={setor.cidade_id}
-					cidade_nome={setor.cidade_nome}
-					cidade_uf={setor.cidade_uf}
-					parentCallback={handleUpdate} />)}
-			<div className={classes.root}>
-				<AdicionarSetor parentCallback={handleUpdate} />
-			</div>
-			<div className={classes.button}>
-				<Button
-					variant="contained"
-					color="primary"
-					size="small"
-					startIcon={<SaveIcon />}
-					onClick={handlePDF}
-				>
-					Save
- 	     		</Button>
-			</div>
+			{
+				authContext.perfil !== 1 ? (
+					<div>
+						<Typography component="h1" variant="h5">
+							Acesso negado.
+        		        </Typography>
+					</div>
+				) : (
+					<div>
+						<h1>Setor de atividade</h1>
+						{setores.map(setor =>
+							<CartaoSetor
+								key={setor.id}
+								id={setor.id}
+								descricao={setor.descricao}
+								cidade_id={setor.cidade_id}
+								cidade_nome={setor.cidade_nome}
+								cidade_uf={setor.cidade_uf}
+								parentCallback={handleUpdate} />)}
+						<div className={classes.root}>
+							<AdicionarSetor parentCallback={handleUpdate} />
+						</div>
+						<div className={classes.button}>
+							<Button
+								variant="contained"
+								color="primary"
+								size="small"
+								startIcon={<SaveIcon />}
+								onClick={handlePDF}
+							>
+								Save
+ 	     					</Button>
+						</div>
+					</div>
+				)
+			}
 		</div>
 	)
 }
