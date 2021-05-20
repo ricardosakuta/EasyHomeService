@@ -73,6 +73,7 @@ export default function Histórico() {
     const [cidades, setCidades] = React.useState([]);
     const authContext = useContext(AuthContext);
     const [expanded, setExpanded] = React.useState([false]);
+    const [cardIndex, setCardIndex] = React.useState([0]);
     const [comentario, setComentario] = React.useState("");
 
     async function getServicosByCurtida(clienteId) {
@@ -101,12 +102,10 @@ export default function Histórico() {
     }, [])
 
     const handleExpandClick = (event) => {
-        setExpanded(!expanded);
-
-        if (expanded)
-            return;
+        setExpanded(true);
 
         let id = event.currentTarget.id
+        setCardIndex(parseInt(id));
         getComentarios(id);
     };
 
@@ -244,17 +243,17 @@ export default function Histórico() {
                             </IconButton>
                             <IconButton
                                 className={clsx(classes.expand, {
-                                    [classes.expandOpen]: expanded,
+                                    [classes.expandOpen]: expanded && cardIndex === index,
                                 })}
                                 onClick={handleExpandClick}
                                 id={index}
-                                aria-expanded={expanded}
+                                aria-expanded={expanded && cardIndex === index}
                                 aria-label="show more"
                             >
                                 <ExpandMoreIcon />
                             </IconButton>
                         </CardActions>
-                        <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        <Collapse in={expanded && cardIndex === index} timeout="auto" unmountOnExit>
                             <CardContent>
                                 {
                                     authContext.idCliente > 0 ? (

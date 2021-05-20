@@ -66,6 +66,7 @@ export default function Home() {
 	const [cidade_id, setCidadeId] = React.useState(-1);
 	const authContext = useContext(AuthContext);
 	const [expanded, setExpanded] = React.useState(false);
+	const [cardIndex, setCardIndex] = React.useState([0]);
 	const [comentario, setComentario] = React.useState("");
 	let timer;
 
@@ -159,12 +160,10 @@ export default function Home() {
 	}
 
 	const handleExpandClick = (event) => {
-		setExpanded(!expanded);
-
-		if (expanded)
-			return;
+		setExpanded(true);
 
 		let id = event.currentTarget.id
+		setCardIndex(parseInt(id));
 		getComentarios(id);
 	};
 
@@ -268,17 +267,17 @@ export default function Home() {
 							</IconButton>
 							<IconButton
 								className={clsx(classes.expand, {
-									[classes.expandOpen]: expanded,
+									[classes.expandOpen]: expanded && cardIndex === index,
 								})}
 								onClick={handleExpandClick}
 								id={index}
-								aria-expanded={expanded}
+								aria-expanded={expanded && cardIndex === index}
 								aria-label="show more"
 							>
 								<ExpandMoreIcon />
 							</IconButton>
 						</CardActions>
-						<Collapse in={expanded} timeout="auto" unmountOnExit>
+						<Collapse in={expanded && cardIndex === index} timeout="auto" unmountOnExit>
 							<CardContent>
 								{
 									authContext.idCliente > 0 ? (
