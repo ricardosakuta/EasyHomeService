@@ -69,8 +69,8 @@ exports.add = async (req, res) => {
 			return;
 		} else {
 			pool.query(
-				`INSERT INTO cliente (email, nome, senha, telefone, perfil_id)
-				VALUES ($1, $2, $3, $4, $5)`,
+				`INSERT INTO cliente (email, nome, senha, telefone, perfil_id, data_criacao)
+				VALUES ($1, $2, $3, $4, $5, current_timestamp)`,
 				[email, nome, senha, telefone, perfil],
 				(error) => {
 					if (error)

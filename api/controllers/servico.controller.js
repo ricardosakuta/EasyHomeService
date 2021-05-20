@@ -42,7 +42,7 @@ exports.post = async (req, res) => {
     const fileKey = 'EMP' + empresa_id + 'ID' + seq + '.' + extensao;
 
     await pool.query(
-        'INSERT INTO servico (empresa_id, seq, nome, descricao, imagem_url, valor) VALUES ($1, $2, $3, $4, $5, $6)',
+        'INSERT INTO servico (empresa_id, seq, nome, descricao, imagem_url, valor, data_criacao) VALUES ($1, $2, $3, $4, $5, $6, current_timestamp)',
         [empresa_id, seq, nome, descricao, fileKey, valor],
         (error, result) => {
             if (error) {

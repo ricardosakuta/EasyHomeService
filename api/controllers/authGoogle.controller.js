@@ -11,8 +11,8 @@ exports.add = async (req, res) => {
     });
     const { name, email } = ticket.getPayload();
 
-    pool.query('INSERT INTO cliente (email, nome, perfil_id) '
-        + 'VALUES ($1, $2, $3) '
+    pool.query('INSERT INTO cliente (email, nome, perfil_id, data_criacao) '
+        + 'VALUES ($1, $2, $3, current_timestamp) '
         + 'ON CONFLICT (email) '
         + 'DO UPDATE SET '
         + 'nome = $2 '
