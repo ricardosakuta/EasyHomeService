@@ -66,6 +66,7 @@ export default function Empresa(props) {
     }
 
     useEffect(() => {
+        console.log('parentCallback: ' + id);
         props.parentCallback(id);
     }, [id, props])
 
@@ -114,6 +115,13 @@ export default function Empresa(props) {
     }
 
     const handleSubmit = (event) => {
+        async function getEmpresa() {
+            let response = await EmpresaAPI.getByCliente(authContext.idCliente);
+            if (response) {
+                setId(response.id);
+            }
+        }
+
         event.preventDefault();
         const cliente_id = authContext.idCliente;
         if (id !== 0) {
@@ -139,6 +147,7 @@ export default function Empresa(props) {
                 telefone
             }).then(res => {
                 callAlert(0, res.message, alertID + 1);
+                getEmpresa();
             }).catch(error => {
                 callAlert(1, error.response.message, alertID + 1);
             });
